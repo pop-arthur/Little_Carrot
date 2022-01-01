@@ -1,10 +1,8 @@
 import sqlite3
-from PyQt5 import QtGui, uic, QtMultimedia, QtCore
-from PyQt5.QtCore import *
-from PyQt5.QtMultimedia import *
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QTableWidgetItem
+from PyQt5 import uic
+from PyQt5.QtWidgets import QApplication, QWidget
 import sys
+from game_process import init_game
 
 
 # функция проверяет есть ли данное имя в бд и возвращает True или False
@@ -39,7 +37,6 @@ def add_player(player_name):
         con.close()
 
 
-
 class HelloScreen(QWidget):
     def __init__(self):
         super(HelloScreen, self).__init__()
@@ -61,7 +58,9 @@ class HelloScreen(QWidget):
 
     def continue_game(self):
         # запустить игру, подгрузив текущий прогресс игрока
-        pass
+        self.close()
+        init_game()
+
 
     def new_game(self):
         # запусить для игрока игру с начала
