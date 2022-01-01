@@ -29,13 +29,3 @@ def add_player(player_name):
         con.commit()
         cur.close()
         con.close()
-
-
-def continue_game():
-    pass
-
-
-
-
-
-
