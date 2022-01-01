@@ -1,5 +1,6 @@
 import sqlite3
 
+
 # функция проверяет есть ли данное имя в бд и возвращает True или False
 def player_exists(player_name):
     con = sqlite3.connect('little_carrot.db')
@@ -16,7 +17,8 @@ def player_exists(player_name):
         cur.close()
         con.close()
 
-#добавляет игрока в db
+
+# добавляет игрока в db
 def add_player(player_name):
     con = sqlite3.connect('little_carrot.db')
     cur = con.cursor()
