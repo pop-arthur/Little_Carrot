@@ -1,3 +1,4 @@
+import sqlite3
 from PyQt5 import QtGui, uic, QtMultimedia, QtCore
 from PyQt5.QtCore import *
 from PyQt5.QtMultimedia import *
@@ -7,13 +8,36 @@ import sys
 
 
 # функция проверяет есть ли данное имя в бд и возвращает True или False
-def player_name_exists(player_name):
-    pass
+def player_exists(player_name):
+    con = sqlite3.connect('little_carrot.db')
+    cur = con.cursor()
+
+    try:
+        cur.execute(f"SELECT count(*) FROM users WHERE player_name = '{player_name}'")
+        value = cur.fetchone()
+        if value[0] == 0:
+            return False
+        else:
+            return True
+    finally:
+        cur.close()
+        con.close()
 
 
-# добавляет имя игрока в бд (регистрация)
-def add_player_name(player_name):
-    pass
+# добавляет игрока в db
+def add_player(player_name):
+    con = sqlite3.connect('little_carrot.db')
+    cur = con.cursor()
+    level, map, health = 1, 1, 0
+
+    try:
+        cur.execute(f"INSERT OR IGNORE INTO users(player_name, level, map, health) "
+                    f"VALUES('{player_name}',{level} , {map}, {health});")
+    finally:
+        con.commit()
+        cur.close()
+        con.close()
+
 
 
 class HelloScreen(QWidget):
@@ -110,7 +134,7 @@ class InputPlayerName(QWidget):
 
         # вход
         elif self.type_of_call == "sign in":
-            if player_name_exists(player_name):
+            if player_exists(player_name):
                 with open("data/qt/current_player.txt", "w", encoding="utf-8") as file:
                     file.write(player_name)
                 self.hello_screen.update_current_player()
@@ -120,8 +144,8 @@ class InputPlayerName(QWidget):
 
         # регистрация
         elif self.type_of_call == "sign up":
-            if not player_name_exists(player_name):
-                add_player_name(player_name)
+            if not player_exists(player_name):
+                add_player(player_name)
                 with open("data/qt/current_player.txt", "w", encoding="utf-8") as file:
                     file.write(player_name)
                 self.hello_screen.update_current_player()
