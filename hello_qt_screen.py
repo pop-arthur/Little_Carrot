@@ -61,10 +61,10 @@ class HelloScreen(QWidget):
         self.close()
         init_game()
 
-
     def new_game(self):
         # запусить для игрока игру с начала
-        pass
+        self.close()
+        init_game()
 
     def account_settings(self):
         # смена аккаунта
