@@ -7,10 +7,32 @@ def get_credits_text(file_name):
     return credits_text
 
 
-def credits(screen, text):  # В функцию приходит Surface, на котором будет изображен текст, и строчка текста
-    credits_font = pygame.font.Font(None, 56)
-    output_text = credits_font.render(text, True, (255, 255, 255))
-    place = output_text.get_rect(center=(500, 350))  # Отцентровка текста
+class Credits(pygame.sprite.Sprite):
+    def __init__(self, group, file_name, timer):
+        super().__init__(group)
+        self.credit_text = get_credits_text(file_name)
+        self.credits_font = pygame.font.Font(None, 56)
+          # Отцентровка текста
+        self.cell_text = 0
+        self.timer = timer
+        self.counter = timer - timer // 2
 
-    screen.fill((0, 0, 0))  # Очищение Surface для написания текста
-    screen.blit(output_text, place)
+    def update(self, screen):
+        self.counter += 1
+        if self.counter == self.timer:
+            self.output_text = self.credits_font.render(self.credit_text[self.cell_text], True, (255, 255, 255))
+            self.place = self.output_text.get_rect(center=(500, 350))
+            screen.fill((0, 0, 0))
+            screen.blit(self.output_text, self.place)
+            self.counter = 0
+            self.cell_text += 1
+
+    def check(self):
+        if self.cell_text + 1 > len(self.credit_text):
+            self.flag = False
+        return self.flag
+
+    def set_flag(self, flag):
+        self.flag = flag
+
+
