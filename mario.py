@@ -74,6 +74,8 @@ def generate_level(level):
                 Tile('chest', x, y)
             elif level[y][x] == 's':
                 Tile('sculpture-1', x, y)
+            elif level[y][x] == 'p':
+                Portal(x, y, 30)
             elif level[y][x] == '@':
                 new_player = Player(x, y)
     # вернем игрока, а также размер поля в клетках
@@ -94,7 +96,7 @@ player_image = load_image('world_design/gold_carrot.png')
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y):
-        super().__init__(tiles_group)
+        super().__init__(all_sprites, tiles_group)
         if tile_type == "empty":
             self.image = load_image(f"world_design/Ground/Dark-grass-{random.randint(1, 4)}.png")
         else:
@@ -107,7 +109,7 @@ class Tile(pygame.sprite.Sprite):
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
-        super().__init__(player_group)
+        super().__init__(all_sprites, player_group)
         self.image = player_image
         self.rect = self.image.get_rect().move(
             tile_width * pos_x + 5, tile_height * pos_y)
@@ -117,6 +119,20 @@ class Player(pygame.sprite.Sprite):
         self.pos = (x, y)
         self.rect = self.image.get_rect().move(
             tile_width * x + 5, tile_height * y)
+
+
+class Portal(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y, n_frames):
+        super(Portal, self).__init__(all_sprites, tiles_group)
+        self.frames = [load_image(f"world_design/Portal/Portal-{i}.png") for i in range(1, 4)]
+        self.cur_frame = 0
+        self.image = self.frames[self.cur_frame]
+        self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
+        self.n_frames = n_frames
+
+    def update(self):
+        self.cur_frame = (self.cur_frame + 1) % (len(self.frames) * self.n_frames)
+        self.image = self.frames[self.cur_frame // self.n_frames]
 
 
 def change_player_pos_on_map(filename, pos_before, pos):
@@ -181,6 +197,7 @@ while True:  # главный игровой цикл
     screen.fill(pygame.Color("black"))
     tiles_group.draw(screen)
     player_group.draw(screen)
+    tiles_group.update()
     draw_lines(screen)
     pygame.display.flip()
     clock.tick(FPS)
