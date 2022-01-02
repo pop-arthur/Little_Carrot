@@ -7,7 +7,7 @@ from game_process import init_game
 
 # функция проверяет есть ли данное имя в бд и возвращает True или False
 def player_exists(player_name):
-    con = sqlite3.connect('little_carrot.db')
+    con = sqlite3.connect('data/little_carrot.db')
     cur = con.cursor()
 
     try:
@@ -24,7 +24,7 @@ def player_exists(player_name):
 
 # добавляет игрока в db
 def add_player(player_name):
-    con = sqlite3.connect('little_carrot.db')
+    con = sqlite3.connect('data/little_carrot.db')
     cur = con.cursor()
     level, map, health = 1, 1, 0
 
