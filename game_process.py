@@ -11,14 +11,15 @@ def init_game():
     running = True
 
     show_start_credits(screen)
-    show_end_credits(screen)
 
-    # while running:
-    #     for event in pygame.event.get():
-    #         if event.type == pygame.QUIT:
-    #             running = False
-    #
-    #     screen.fill("black")
-    #
-    #     pygame.display.flip()
-    #     clock.tick(fps)
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        screen.fill("black")
+
+        pygame.display.flip()
+        clock.tick(fps)
+
+    show_end_credits(screen)
