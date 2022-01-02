@@ -12,14 +12,13 @@ class Credits(pygame.sprite.Sprite):
         super().__init__(group)
         self.credit_text = get_credits_text(file_name)
         self.credits_font = pygame.font.Font(None, 56)
-          # Отцентровка текста
         self.cell_text = 0
         self.timer = timer
-        self.counter = timer - timer // 2
+        self.counter = timer // 2
 
     def update(self, screen):
         self.counter += 1
-        if self.counter == self.timer:
+        if self.counter == self.timer:  # Таймер
             self.output_text = self.credits_font.render(self.credit_text[self.cell_text], True, (255, 255, 255))
             self.place = self.output_text.get_rect(center=(500, 350))
             screen.fill((0, 0, 0))
@@ -27,12 +26,10 @@ class Credits(pygame.sprite.Sprite):
             self.counter = 0
             self.cell_text += 1
 
-    def check(self):
+    def check(self):  # Если вывелся весь файл, то флаг меняется на False
         if self.cell_text + 1 > len(self.credit_text):
             self.flag = False
         return self.flag
 
-    def set_flag(self, flag):
+    def set_flag(self, flag):  # Изменение флага вручную
         self.flag = flag
-
-
