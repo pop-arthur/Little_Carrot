@@ -1,4 +1,5 @@
 import pygame
+from credits import show_start_credits, show_end_credits
 
 
 def init_game():
@@ -8,12 +9,16 @@ def init_game():
 
     fps = 60
     running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
 
-        screen.fill("black")
+    show_start_credits(screen)
+    show_end_credits(screen)
 
-        pygame.display.flip()
-        clock.tick(fps)
+    # while running:
+    #     for event in pygame.event.get():
+    #         if event.type == pygame.QUIT:
+    #             running = False
+    #
+    #     screen.fill("black")
+    #
+    #     pygame.display.flip()
+    #     clock.tick(fps)
