@@ -26,28 +26,25 @@ def load_image(name, color_key=None, scale_size=(100, 100)):
     return image
 
 
-def change_player_pos_on_map(filename, pos_before, pos):
+def change_player_pos_on_map(filename, pos):
     filename = "data/" + filename
     with open(filename, "r", encoding="utf-8") as map_file:
-        data = map_file.readlines()
+        data = map_file.readlines()[:-1] + [' '.join(map(str, pos))]
 
-    data = [row.split() for row in data]
-    data[pos_before[1]][pos_before[0]] = "."
-    data[pos[1]][pos[0]] = "carrot"
-
-    data = ["\t".join(row) for row in data]
     with open(filename, "w", encoding="utf-8") as map_file:
-        map_file.write("\n".join(data))
+        map_file.write("".join(data))
 
 
 def load_level(filename):
     filename = "data/" + filename
     # читаем уровень, убирая символы перевода строки
     with open(filename, 'r') as mapFile:
-        level_map = [line.strip() for line in mapFile]
+        data = [line.strip() for line in mapFile]
+
+    level_map, player_pos = data[:-1], list(map(int, data[-1].split()))
 
     level_map = [elem.split() for elem in level_map]
-    return level_map
+    return level_map, player_pos
 
 
 def draw_lines(screen):

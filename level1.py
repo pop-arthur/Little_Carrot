@@ -1,7 +1,4 @@
-import os
 import random
-import sys
-import pygame
 from game_init_functions import *
 from dialogs import Dialog
 
@@ -10,6 +7,9 @@ def game_process_level_1(screen):
     FPS = 60
     tile_width, tile_height = 100, 100
     clock = pygame.time.Clock()
+
+    max_x = 9
+    max_y = 7
 
     map_filename = 'levels/level1_1.txt'
 
@@ -93,13 +93,12 @@ def game_process_level_1(screen):
                     Tile(level[y][x], x, y)
 
         # вернем игрока, а также размер поля в клетках
-        return new_player, len(level[0]), len(level)
 
     def move(player, movement):
-        global level_map
-        level_map = load_level(map_filename)
+        nonlocal level_map
+        level_map = load_level(map_filename)[0]
 
-        x, y = pos_before = player.pos
+        x, y = player.pos
         if movement == "up":
             if y > 0 and level_map[y - 1][x] == ".":
                 player.move(x, y - 1)
@@ -113,12 +112,12 @@ def game_process_level_1(screen):
             if x < max_x and level_map[y][x + 1] == ".":
                 player.move(x + 1, y)
 
-        change_player_pos_on_map(map_filename, pos_before, player.pos)
+        change_player_pos_on_map(map_filename, player.pos)
         level_map = load_level(map_filename)
 
-
-    level_map = load_level(map_filename)
-    player, max_x, max_y = generate_level(level_map)
+    level_map, player_pos = load_level(map_filename)
+    player = Player(*player_pos)
+    generate_level(level_map)
 
     for i in range(256):
         for event in pygame.event.get():
@@ -148,7 +147,6 @@ def game_process_level_1(screen):
                 if player.check_parrot() and dialog_with_parrot.check_start_dialog():
                     dialog_with_parrot.next_string(screen)
 
-        #screen.fill(pygame.Color("black"))
         tiles_group.draw(screen)
         player_group.draw(screen)
         tiles_group.update()
