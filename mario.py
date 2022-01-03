@@ -6,7 +6,7 @@ import pygame
 FPS = 60
 
 pygame.init()
-size = width, height = (1000, 800)
+size = width, height = (1000, 900)
 tile_width, tile_height = 100, 100
 pygame.display.set_caption("Перемещение героя")
 screen = pygame.display.set_mode(size)
@@ -75,7 +75,7 @@ def generate_level(level):
             elif level[y][x] == 's':
                 Tile('sculpture-1', x, y)
             elif level[y][x] == 'p':
-                Portal(x, y, 30)
+                Tile("chest", x, y)
             elif level[y][x] == '@':
                 new_player = Player(x, y)
     # вернем игрока, а также размер поля в клетках
@@ -83,7 +83,7 @@ def generate_level(level):
 
 
 tile_images = {
-    'wall': {'image': load_image('world_design/Bushes/Bush-4.png'),
+    'wall': {'image': load_image('world_design/Bushes/Bush-1.png'),
              'indent': (0, 0)},  # отступ от края ячейки
     'chest': {'image': load_image('world_design/Bench and chest/Chest.png', scale_size=(75,) * 2),
               'indent': (12, 25)},
@@ -172,8 +172,8 @@ def move(player, movement):
 
 def draw_lines(screen):
     color = (48, 77, 46)
-    [pygame.draw.line(screen, color, (x, 0), (x, height), 1) for x in range(0, width, tile_width)]
-    [pygame.draw.line(screen, color, (0, y), (width, y), 1) for y in range(0, height, tile_height)]
+    [pygame.draw.line(screen, color, (x, 0), (x, 800), 1) for x in range(0, width, tile_width)]
+    [pygame.draw.line(screen, color, (0, y), (width, y), 1) for y in range(0, 800, tile_height)]
 
 
 level_map = load_level('map.txt')

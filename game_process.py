@@ -1,25 +1,22 @@
 import pygame
 from credits import show_start_credits, show_end_credits
+from level1 import game_process_level_1
+from level2 import game_process_level_2
+from level3 import game_process_level_3
 
 
 def init_game():
     pygame.init()
-    clock = pygame.time.Clock()
     screen = pygame.display.set_mode((1000, 800))
-
-    fps = 60
-    running = True
 
     show_start_credits(screen)
 
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        screen.fill("black")
-
-        pygame.display.flip()
-        clock.tick(fps)
+    game_process_level_1(screen)
+    game_process_level_2(screen)
+    game_process_level_3(screen)
 
     show_end_credits(screen)
+
+
+if __name__ == '__main__':
+    init_game()

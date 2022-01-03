@@ -1,0 +1,61 @@
+import os
+import pygame
+import sys
+
+
+def load_image(name, color_key=None, scale_size=(100, 100)):
+    scale_size: tuple
+    fullname = os.path.join('data/', name)
+
+    # если файл не существует, то выходим
+    if not os.path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
+    image = pygame.image.load(fullname)
+
+    if color_key is not None:
+        image = image.convert()
+        if color_key == -1:
+            color_key = image.get_at((0, 0))
+        image.set_colorkey(color_key)
+    else:
+        image = image.convert_alpha()
+
+    if scale_size:
+        image = pygame.transform.scale(image, scale_size)
+    return image
+
+
+def change_player_pos_on_map(filename, pos_before, pos):
+    filename = "data/" + filename
+    with open(filename, "r", encoding="utf-8") as map_file:
+        data = map_file.readlines()
+
+    data = [row.split() for row in data]
+    data[pos_before[1]][pos_before[0]] = "."
+    data[pos[1]][pos[0]] = "carrot"
+
+    data = ["\t".join(row) for row in data]
+    with open(filename, "w", encoding="utf-8") as map_file:
+        map_file.write("\n".join(data))
+
+
+def load_level(filename):
+    filename = "data/" + filename
+    # читаем уровень, убирая символы перевода строки
+    with open(filename, 'r') as mapFile:
+        level_map = [line.strip() for line in mapFile]
+
+    level_map = [elem.split() for elem in level_map]
+    return level_map
+
+
+def draw_lines(screen):
+    color = (48, 77, 46)
+    [pygame.draw.line(screen, color, (x, 0), (x, 800), 1) for x in range(0, 1000, 100)]
+    [pygame.draw.line(screen, color, (0, y), (1000, y), 1) for y in range(0, 800, 100)]
+
+
+def terminate():
+    pygame.quit()
+    sys.exit()
