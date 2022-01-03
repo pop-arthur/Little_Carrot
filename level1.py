@@ -75,7 +75,6 @@ def game_process_level_1(screen):
 
     def generate_level(level):
         new_player, x, y = None, None, None
-        print(level)
         for y in range(len(level)):
             for x in range(len(level[y])):
                 Tile('empty', x, y)
