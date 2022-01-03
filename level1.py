@@ -3,6 +3,7 @@ import random
 import sys
 import pygame
 from game_init_functions import *
+from dialogs import Dialog
 
 
 def game_process_level_1(screen):
@@ -40,6 +41,11 @@ def game_process_level_1(screen):
             self.rect = self.image.get_rect().move(
                 tile_width * x + 5, tile_height * y)
 
+        def check_parrot(self):
+            if self.pos == (4, 2):
+                return True
+            return False
+
     class Portal(pygame.sprite.Sprite):
         def __init__(self, pos_x, pos_y, n_frames):
             super(Portal, self).__init__(all_sprites, tiles_group)
@@ -57,6 +63,7 @@ def game_process_level_1(screen):
     all_sprites = pygame.sprite.Group()
     tiles_group = pygame.sprite.Group()
     player_group = pygame.sprite.Group()
+    dialogs_group = pygame.sprite.Group()
 
     tile_images = {'empty': ['', (0, 0)],
                    'Bush-4.png': [load_image('world_design/Bushes/Bush-4.png', scale_size=(74, 74)), (13, 35)],
@@ -110,6 +117,7 @@ def game_process_level_1(screen):
         change_player_pos_on_map(map_filename, pos_before, player.pos)
         level_map = load_level(map_filename)
 
+
     level_map = load_level(map_filename)
     player, max_x, max_y = generate_level(level_map)
 
@@ -122,6 +130,8 @@ def game_process_level_1(screen):
         pygame.display.flip()
         clock.tick(FPS)
 
+    dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog1.txt')
+    screen.fill((0, 0, 0))
     while True:  # главный игровой цикл
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -135,8 +145,11 @@ def game_process_level_1(screen):
                     move(player, "down")
                 if event.key == pygame.K_d:
                     move(player, "right")
+            if event.type == pygame.MOUSEBUTTONUP:
+                if player.check_parrot() and dialog_with_parrot.check_start_dialog():
+                    dialog_with_parrot.next_string(screen)
 
-        screen.fill(pygame.Color("black"))
+        #screen.fill(pygame.Color("black"))
         tiles_group.draw(screen)
         player_group.draw(screen)
         tiles_group.update()
