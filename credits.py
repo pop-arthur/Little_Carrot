@@ -2,7 +2,7 @@ import pygame
 
 
 def get_credits_text(file_name):
-    with open(file_name, 'r') as credits_file:
+    with open(file_name, 'r', encoding='utf-8') as credits_file:
         credits_text = list(map(lambda x: x.strip(), credits_file.readlines()))
     return credits_text
 
@@ -20,7 +20,7 @@ class Credits(pygame.sprite.Sprite):
         self.counter += 1
         if self.counter == self.timer:  # Таймер
             self.output_text = self.credits_font.render(self.credit_text[self.cell_text], True, (255, 255, 255))
-            self.place = self.output_text.get_rect(center=(500, 350))
+            self.place = self.output_text.get_rect(center=(500, 420))
             screen.fill((0, 0, 0))
             screen.blit(self.output_text, self.place)
             self.counter = 0
