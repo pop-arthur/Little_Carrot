@@ -70,7 +70,7 @@ def game_process_level_1(screen):
                        [load_image('world_design/Fences/Big wooden fence/Big-wooden-fence-3.png', scale_size=(100, 75)),
                         (0, 25)],
                    'parrot': [load_image('world_design/characters/parrot.png'), (0, 0)],
-                   'Stone-1.png': [load_image('world_design/Stones/Stone-1.png'), (0, 0)]}
+                   'Stone-1.png': [load_image('world_design/Stones/Stone-1.png', scale_size=(74, 90)), (13, 10)]}
     player_image = load_image('world_design/gold_carrot_ok.png')
 
     def generate_level(level):
