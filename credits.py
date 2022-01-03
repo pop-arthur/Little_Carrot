@@ -1,9 +1,11 @@
 import pygame
+from  game_init_functions import *
 
 
 def get_credits_text(file_name):
     with open(file_name, 'r', encoding='utf-8') as credits_file:
         credits_text = list(map(lambda x: x.strip(), credits_file.readlines()))
+        credits_text.append('')
     return credits_text
 
 
@@ -19,12 +21,16 @@ class Credits(pygame.sprite.Sprite):
     def update(self, screen):
         self.counter += 1
         if self.counter == self.timer:  # Таймер
-            self.output_text = self.credits_font.render(self.credit_text[self.cell_text], True, (255, 255, 255))
-            self.place = self.output_text.get_rect(center=(500, 420))
-            screen.fill((0, 0, 0))
-            screen.blit(self.output_text, self.place)
-            self.counter = 0
-            self.cell_text += 1
+            self.next_string(screen)
+
+    def next_string(self, screen):
+        self.output_text = self.credits_font.render(self.credit_text[self.cell_text], True, (255, 255, 255))
+        self.place = self.output_text.get_rect(center=(500, 420))
+        screen.fill((0, 0, 0))
+        screen.blit(self.output_text, self.place)
+        self.counter = 0
+        self.cell_text += 1
+
 
     def check(self):  # Если вывелся весь файл, то флаг меняется на False
         if self.cell_text + 1 > len(self.credit_text):
@@ -50,7 +56,10 @@ def show_start_credits(screen):
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                terminate()
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                opening_credits.next_string(screen)
 
         if opening_credits.check():  # Вывод начальной заставки
             opening_credits_group.update(screen)
@@ -77,7 +86,7 @@ def show_end_credits(screen):
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                terminate()
 
         if final_credits.check():  # Вывод конечных титр
             final_credits_group.update(screen)
