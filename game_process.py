@@ -7,7 +7,7 @@ from level3 import game_process_level_3
 
 def init_game():
     pygame.init()
-    screen = pygame.display.set_mode((1000, 800))
+    screen = pygame.display.set_mode((1000, 900))
 
     show_start_credits(screen)
 

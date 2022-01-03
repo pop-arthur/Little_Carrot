@@ -93,8 +93,6 @@ def game_process_level_1(screen):
         global level_map
         level_map = load_level(map_filename)
 
-        print(level_map)
-
         x, y = pos_before = player.pos
         if movement == "up":
             if y > 0 and level_map[y - 1][x] == ".":
