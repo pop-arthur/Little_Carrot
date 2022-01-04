@@ -1,6 +1,7 @@
 from game_init_functions import *
 import pygame
 import random
+from dialogs import Dialog
 
 
 def game_process_level_2(screen):
@@ -155,6 +156,8 @@ def game_process_level_2(screen):
     player = Player(*player_pos)
     generate_level(level_map)
 
+    dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog3.txt')
+
     screen.fill((0, 0, 0))
     while True:  # главный игровой цикл
         for event in pygame.event.get():
@@ -170,9 +173,11 @@ def game_process_level_2(screen):
                 if event.key == pygame.K_d:
                     move(player, "right")
 
-        if level_map[player.pos[1]][player.pos[0]] == 'red_point.png' and current_map_filename == map_filename_1:
-            # диалог с попугаем
-            pass
+            if event.type == pygame.MOUSEBUTTONUP:
+
+                if level_map[player.pos[1]][player.pos[0]] == 'red_point.png' and current_map_filename == map_filename_1:
+                    if dialog_with_parrot.check_start_dialog():
+                        dialog_with_parrot.next_string(screen)
 
         if level_map[player.pos[1]][player.pos[0]] == 'blue_door_right.png-1_1':
             door = get_door('1_1')
