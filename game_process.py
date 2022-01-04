@@ -9,9 +9,9 @@ def init_game():
     pygame.init()
     screen = pygame.display.set_mode((1000, 900))
 
-    show_start_credits(screen)
+    #show_start_credits(screen)
 
-    game_process_level_1(screen)
+    #game_process_level_1(screen)
     game_process_level_2(screen)
     game_process_level_3(screen)
 

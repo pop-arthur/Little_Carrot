@@ -23,6 +23,7 @@ def game_process_level_2(screen):
     player_group = pygame.sprite.Group()
     doors_group = pygame.sprite.Group()
     dialogs_group = pygame.sprite.Group()
+    egg_group = pygame.sprite.Group()
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
@@ -151,9 +152,15 @@ def game_process_level_2(screen):
 
         change_player_pos_on_map(current_map_filename, player.pos)
 
+
+
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
     generate_level(level_map)
+
+    start_flag = False
+    for i in range(10):
+        Egg(all_sprites, egg_group)
 
     screen.fill((0, 0, 0))
     while True:  # главный игровой цикл
@@ -174,17 +181,26 @@ def game_process_level_2(screen):
             # диалог с попугаем
             pass
 
-        if level_map[player.pos[1]][player.pos[0]] == 'blue_door_right.png-1_1':
-            door = get_door('1_1')
-            if door:
-                door.go_through_the_door()
-                # начало яиц
+
 
         tiles_group.draw(screen)
         doors_group.draw(screen)
         player_group.draw(screen)
         tiles_group.update()
         draw_lines(screen)
+        if start_flag:
+            egg_group.update()
+
+        if level_map[player.pos[1]][player.pos[0]] == 'blue_door_right.png-1_1':
+            door = get_door('1_1')
+            if door:
+                door.go_through_the_door()
+                if not start_flag:
+                    egg_group.draw(screen)
+                    start_flag = True
+
+
+
         pygame.display.flip()
         clock.tick(FPS)
 
