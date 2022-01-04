@@ -1,6 +1,7 @@
 from game_init_functions import *
 import pygame
 import random
+#from egg_game import Egg, Border
 
 
 def game_process_level_2(screen):
@@ -24,6 +25,8 @@ def game_process_level_2(screen):
     doors_group = pygame.sprite.Group()
     dialogs_group = pygame.sprite.Group()
     egg_group = pygame.sprite.Group()
+    horizontal_borders = pygame.sprite.Group()
+    vertical_borders = pygame.sprite.Group()
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
@@ -84,6 +87,9 @@ def game_process_level_2(screen):
             if self.pos == (4, 2):
                 return True
             return False
+
+        def damage(self, count_of_damage):
+            print('Вас ударило')
 
     class Door(pygame.sprite.Sprite):
         doors_dict = {'1_1': [map_filename_2, (0, 4)]}
@@ -153,14 +159,62 @@ def game_process_level_2(screen):
         change_player_pos_on_map(current_map_filename, player.pos)
 
 
+    class Egg(pygame.sprite.Sprite):
+        egg_image = load_image('world_design/characters/egg.png', scale_size=(50, 80))
+        def __init__(self, all_sprites, group, timer):
+            super().__init__(all_sprites, group)
+            self.image = Egg.egg_image
+            self.rect = self.image.get_rect().move(600, 500)
+            speeds = [-8, -7, -6, -5, 5, 6, 7, 8,]
+            self.vx = random.choice(speeds)
+            self.vy = random.choice(speeds)
+            self.timer = timer
+
+        def update(self):
+            self.timer -= 1
+            self.rect = self.rect.move(self.vx, self.vy)
+            if pygame.sprite.spritecollideany(self, horizontal_borders):
+                self.vy = -self.vy
+            if pygame.sprite.spritecollideany(self, vertical_borders):
+                self.vx = -self.vx
+
+            if pygame.sprite.spritecollideany(self, player_group):
+                player.damage(1)
+                self.vx = -self.vx
+                self.vy = -self.vy
+            if self.timer == 0:
+                self.kill()
+
+
+
+
+    class Border(pygame.sprite.Sprite):
+        # строго вертикальный или строго горизонтальный отрезок
+        def __init__(self, x1, y1, x2, y2):
+            super().__init__(all_sprites)
+            if x1 == x2:  # вертикальная стенка
+                self.add(vertical_borders)
+                self.image = pygame.Surface([1, y2 - y1])
+                self.rect = pygame.Rect(x1, y1, 1, y2 - y1)
+            else:  # горизонтальная стенка
+                self.add(horizontal_borders)
+                self.image = pygame.Surface([x2 - x1, 1])
+                self.rect = pygame.Rect(x1, y1, x2 - x1, 1)
+
+
 
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
     generate_level(level_map)
 
     start_flag = False
-    for i in range(10):
-        Egg(all_sprites, egg_group)
+    for i in range(7):
+        Egg(all_sprites, egg_group, 500)
+
+    Border(1, 1, 999, 1)
+    Border(1, 799, 999, 799)
+    Border(1, 1, 1, 799)
+    Border(999, 1, 999, 799)
 
     screen.fill((0, 0, 0))
     while True:  # главный игровой цикл
@@ -189,15 +243,18 @@ def game_process_level_2(screen):
         tiles_group.update()
         draw_lines(screen)
         if start_flag:
+            horizontal_borders.draw(screen)
+            vertical_borders.draw(screen)
+            egg_group.draw(screen)
             egg_group.update()
 
         if level_map[player.pos[1]][player.pos[0]] == 'blue_door_right.png-1_1':
             door = get_door('1_1')
             if door:
                 door.go_through_the_door()
-                if not start_flag:
-                    egg_group.draw(screen)
-                    start_flag = True
+                start_flag = True
+
+
 
 
 
