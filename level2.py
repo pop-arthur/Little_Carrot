@@ -24,6 +24,7 @@ def game_process_level_2(screen):
     player_group = pygame.sprite.Group()
     doors_group = pygame.sprite.Group()
     dialogs_group = pygame.sprite.Group()
+
     egg_group = pygame.sprite.Group()
     horizontal_borders = pygame.sprite.Group()
     vertical_borders = pygame.sprite.Group()
@@ -238,12 +239,23 @@ def game_process_level_2(screen):
                 if level_map[player.pos[1]][player.pos[0]] == 'red_point.png' and current_map_filename == map_filename_1:
                     if dialog_with_parrot.check_start_dialog():
                         dialog_with_parrot.next_string(screen)
+        if level_map[player.pos[1]][player.pos[0]] == 'red_point.png' and current_map_filename == map_filename_1:
+            # диалог с попугаем
+            pass
+
+        if level_map[player.pos[1]][player.pos[0]] == 'blue_door_right.png-1_1':
+            door = get_door('1_1')
+            if door:
+                door.go_through_the_door()
+                # начало яиц
+                pass
 
         tiles_group.draw(screen)
         doors_group.draw(screen)
         player_group.draw(screen)
         tiles_group.update()
         draw_lines(screen)
+
         if start_flag:
             horizontal_borders.draw(screen)
             vertical_borders.draw(screen)
