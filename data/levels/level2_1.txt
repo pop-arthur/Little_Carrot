@@ -1,9 +1,9 @@
-.	.	.	.	.	.	.	.	.	.
-.	.	.	.	.	.	.	.	.	.
-.	.	.	.	.	.	parrot	.	.	.
-.	.	.	.	.	.	.	.	.	.
-.	.	.	.	.	.	.	.	.	blue_door_right.png-1_1
-.	.	.	.	.	.	.	.	.	.
-.	.	.	.	.	.	.	.	.	.
-.	.	.	.	.	.	.	.	.	.
+dirty_row.png	dirty_row.png	dirty_row.png	dirty_row.png	.	.	.	.	.	.
+.	.	.	.	.	dirty_row.png	dirty_row.png	.	.	.
+.	dirty_row.png	.	dirty_row.png	.	parrot	dirty_row.png	.	dirty_row.png	dirty_row.png
+.	dirty_row.png	.	dirty_row.png	dirty_row.png	dirty_row.png	dirty_row.png	dirty_row.png	.	.
+.	dirty_row.png	.	.	.	.	.	dirty_row.png	.	blue_door_right.png-1_1
+.	dirty_row.png	.	.	dirty_row.png	dirty_row.png	dirty_row.png	.	.	.
+.	dirty_row.png	dirty_row.png	dirty_row.png	.	.	.	.	dirty_row.png	dirty_row.png
+.	.	.	.	.	dirty_row.png	dirty_row.png	.	.	.
 -1 -1

@@ -45,8 +45,14 @@ def game_process_level_2(screen):
                                        scale_size=(100, 75)),
                             (0, 25)],
                        'parrot': [load_image('world_design/characters/parrot.png'), (0, 0)],
+                       'potato': [load_image('world_design/characters/potato.png'), (0, 0)],
                        'Stone-1.png': [load_image('world_design/Stones/Stone-1.png', scale_size=(74, 90)), (13, 10)],
-                       'red_point.png': [load_image('world_design/points/red_point.png'), (0, 0)]}
+                       'red_point.png': [load_image('world_design/points/red_point.png'), (0, 0)],
+                       'dirty_row.png': [load_image('world_design/Ground/dirty_row.png'), (0, 0)],
+                       'Sculture-2.png': [load_image('world_design/Sculptures/Sculture-2.png'), (0, 0)],
+                       'box.png': [load_image('world_design/Stones/box.png'), (0, 0)],
+                       'light_earth.png': [load_image('world_design/Ground/light_earth.png'), (0, 0)],
+                       'Tree-1-4.png': [load_image('added world_design/Trees/Tree-1/Tree-1-4.png'), (0, 0)]}
 
         def __init__(self, tile_type, pos_x, pos_y):
             super().__init__(all_sprites, tiles_group)
@@ -70,11 +76,12 @@ def game_process_level_2(screen):
                     tiles_group.remove(self)
 
     class Player(pygame.sprite.Sprite):
-        player_image = load_image('world_design/gold_carrot_ok.png')
+        player_ok_image = load_image('world_design/characters/gold_carrot_ok.png')
+        player_flattened_image = load_image('world_design/characters/gold_carrot_flattened.png')
 
         def __init__(self, pos_x, pos_y):
             super().__init__(all_sprites, player_group)
-            self.image = Player.player_image
+            self.image = Player.player_ok_image
             self.rect = self.image.get_rect().move(
                 tile_width * pos_x + 5, tile_height * pos_y)
             self.pos = (pos_x, pos_y)
@@ -89,11 +96,18 @@ def game_process_level_2(screen):
                 return True
             return False
 
+        def be_flattened(self):
+            self.image = Player.player_flattened_image
+
+        def be_ok(self):
+            self.image = Player.player_ok_image
+
         def damage(self, count_of_damage):
             print('Вас ударило')
 
     class Door(pygame.sprite.Sprite):
-        doors_dict = {'1_1': [map_filename_2, (0, 4)]}
+        doors_dict = {'1_1': [map_filename_2, (0, 4)],
+                      '2_1': [map_filename_3, (0, 4)]}
         doors_images = {
             'blue_door_right.png': load_image('world_design/doors/blue_door_right.png')
         }
@@ -137,11 +151,21 @@ def game_process_level_2(screen):
                 else:
                     Tile(level[y][x], x, y)
 
-    possible_to_move_objects = {'.', 'red_point.png', 'blue_door_right.png-1_1'}
+    possible_to_move_objects = {'.', 'red_point.png', 'blue_door_right.png-1_1', 'dirty_row.png'}
 
     def move(player, movement):
         nonlocal level_map
         level_map = load_level(current_map_filename)[0]
+
+        if swap_control:
+            if movement == "up":
+                movement = "down"
+            elif movement == "down":
+                movement = "up"
+            elif movement == "left":
+                movement = "right"
+            elif movement == "right":
+                movement = "left"
 
         x, y = player.pos
         if movement == "up":
@@ -157,16 +181,20 @@ def game_process_level_2(screen):
             if x < max_x - 1 and level_map[y][x + 1] in possible_to_move_objects:
                 player.move(x + 1, y)
 
+        # положение на карте
         change_player_pos_on_map(current_map_filename, player.pos)
-
+        # грядки
+        if level_map[player.pos[1]][player.pos[0]] == 'dirty_row.png':
+            player.damage(1)
 
     class Egg(pygame.sprite.Sprite):
         egg_image = load_image('world_design/characters/egg.png', scale_size=(50, 80))
+
         def __init__(self, all_sprites, group, timer):
             super().__init__(all_sprites, group)
             self.image = Egg.egg_image
             self.rect = self.image.get_rect().move(600, 500)
-            speeds = [-8, -7, -6, -5, 5, 6, 7, 8,]
+            speeds = [-8, -7, -6, -5, 5, 6, 7, 8]
             self.vx = random.choice(speeds)
             self.vy = random.choice(speeds)
             self.timer = timer
@@ -186,9 +214,6 @@ def game_process_level_2(screen):
             if self.timer == 0:
                 self.kill()
 
-
-
-
     class Border(pygame.sprite.Sprite):
         # строго вертикальный или строго горизонтальный отрезок
         def __init__(self, x1, y1, x2, y2):
@@ -202,17 +227,16 @@ def game_process_level_2(screen):
                 self.image = pygame.Surface([x2 - x1, 1])
                 self.rect = pygame.Rect(x1, y1, x2 - x1, 1)
 
-
-
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
+    player.be_flattened()
     generate_level(level_map)
 
     dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog3.txt')
 
-    start_flag = False
+    eggs_started = False
     for i in range(7):
-        Egg(all_sprites, egg_group, 500)
+        Egg(all_sprites, egg_group, 100)
 
     Border(1, 1, 999, 1)
     Border(1, 799, 999, 799)
@@ -220,6 +244,19 @@ def game_process_level_2(screen):
     Border(999, 1, 999, 799)
 
     screen.fill((0, 0, 0))
+
+    def creating_second_door():
+        nonlocal second_door_is_active, create_second_door
+        print(1)
+        Door(9, 4, '2_1', 'blue_door_right.png')
+        second_door_is_active = True
+        create_second_door = False
+
+    first_dialog_started = False
+    swap_control = True
+    create_second_door = True
+    second_door_is_active = False
+
     while True:  # главный игровой цикл
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -235,20 +272,32 @@ def game_process_level_2(screen):
                     move(player, "right")
 
             if event.type == pygame.MOUSEBUTTONUP:
-
-                if level_map[player.pos[1]][player.pos[0]] == 'red_point.png' and current_map_filename == map_filename_1:
+                if player.pos == (5, 2) and \
+                        current_map_filename == map_filename_1:
                     if dialog_with_parrot.check_start_dialog():
                         dialog_with_parrot.next_string(screen)
-        if level_map[player.pos[1]][player.pos[0]] == 'red_point.png' and current_map_filename == map_filename_1:
-            # диалог с попугаем
-            pass
 
-        if level_map[player.pos[1]][player.pos[0]] == 'blue_door_right.png-1_1':
+        # старт диалога
+        if not first_dialog_started and player.pos == (5, 2) and current_map_filename == map_filename_1:
+            if dialog_with_parrot.check_start_dialog():
+                dialog_with_parrot.next_string(screen)
+                first_dialog_started = True
+
+        # дверь 1
+        if level_map[player.pos[1]][player.pos[0]] == 'blue_door_right.png-1_1' and \
+                current_map_filename == map_filename_1:
             door = get_door('1_1')
             if door:
                 door.go_through_the_door()
-                # начало яиц
-                pass
+                eggs_started = True
+
+        # дверь 2
+        if second_door_is_active and player.pos == (9, 4):
+            door = get_door('2_1')
+            door.go_through_the_door()
+            all_sprites.remove(door)
+            doors_group.remove(door)
+            second_door_is_active = False
 
         tiles_group.draw(screen)
         doors_group.draw(screen)
@@ -256,21 +305,14 @@ def game_process_level_2(screen):
         tiles_group.update()
         draw_lines(screen)
 
-        if start_flag:
+        if eggs_started:
+            if create_second_door:
+                creating_second_door()
+
             horizontal_borders.draw(screen)
             vertical_borders.draw(screen)
             egg_group.draw(screen)
             egg_group.update()
-
-        if level_map[player.pos[1]][player.pos[0]] == 'blue_door_right.png-1_1':
-            door = get_door('1_1')
-            if door:
-                door.go_through_the_door()
-                start_flag = True
-
-
-
-
 
         pygame.display.flip()
         clock.tick(FPS)
