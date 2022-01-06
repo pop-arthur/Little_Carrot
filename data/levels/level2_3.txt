@@ -1,9 +1,9 @@
 .	.	.	.	.	box.png	.   .   .   .
 .	.	.	.	Tree-1-4.png	box.png	.   .   .   .
 .	.	Sculture-2.png	.	box.png	.   .   .   .   .
-.	.	.	.	.   .   .   .   .   .
+.	.	.	.	.   .   .   .   red_point.png   potato
 .	.	.	.	.   .   .   .   .   .
 .	.	Sculture-2.png	.	box.png	.   .   .   .   .
 .	.	.	.	Tree-1-4.png	box.png	.   .   .   .
 .	.	.	.	.	box.png .   .   .   .
-5 3
+-1 -1

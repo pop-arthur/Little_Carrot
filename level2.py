@@ -52,7 +52,8 @@ def game_process_level_2(screen):
                        'Sculture-2.png': [load_image('world_design/Sculptures/Sculture-2.png'), (0, 0)],
                        'box.png': [load_image('world_design/Stones/box.png'), (0, 0)],
                        'light_earth.png': [load_image('world_design/Ground/light_earth.png'), (0, 0)],
-                       'Tree-1-4.png': [load_image('added world_design/Trees/Tree-1/Tree-1-4.png'), (0, 0)]}
+                       'Tree-1-4.png': [load_image('world_design/Trees/Tree-1/Tree-1-4.png'), (0, 0)],
+                       'portal.png': [load_image('world_design/points/portal.png'), (0, 0)]}
 
         def __init__(self, tile_type, pos_x, pos_y):
             super().__init__(all_sprites, tiles_group)
@@ -107,9 +108,11 @@ def game_process_level_2(screen):
 
     class Door(pygame.sprite.Sprite):
         doors_dict = {'1_1': [map_filename_2, (0, 4)],
-                      '2_1': [map_filename_3, (0, 4)]}
+                      '2_1': [map_filename_3, (0, 4)],
+                      '3_1': [map_filename_2, (9, 4)]}
         doors_images = {
-            'blue_door_right.png': load_image('world_design/doors/blue_door_right.png')
+            'blue_door_right.png': load_image('world_design/doors/blue_door_right.png'),
+            'blue_door_left.png': load_image('world_design/doors/blue_door_left.png')
         }
 
         def __init__(self, pos_x, pos_y, door_num, door_type):
@@ -190,8 +193,8 @@ def game_process_level_2(screen):
     class Egg(pygame.sprite.Sprite):
         egg_image = load_image('world_design/characters/egg.png', scale_size=(50, 80))
 
-        def __init__(self, all_sprites, group, timer):
-            super().__init__(all_sprites, group)
+        def __init__(self, timer):
+            super().__init__(all_sprites, egg_group)
             self.image = Egg.egg_image
             self.rect = self.image.get_rect().move(600, 500)
             speeds = [-8, -7, -6, -5, 5, 6, 7, 8]
@@ -227,6 +230,17 @@ def game_process_level_2(screen):
                 self.image = pygame.Surface([x2 - x1, 1])
                 self.rect = pygame.Rect(x1, y1, x2 - x1, 1)
 
+    def creating_second_door():
+        nonlocal second_door_is_active, create_second_door
+        Door(9, 4, '2_1', 'blue_door_right.png')
+        second_door_is_active = True
+        create_second_door = False
+
+    def creating_third_door():
+        nonlocal third_door_is_active
+        Door(0, 4, '3_1', 'blue_door_left.png')
+        third_door_is_active = True
+
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
     player.be_flattened()
@@ -236,7 +250,7 @@ def game_process_level_2(screen):
 
     eggs_started = False
     for i in range(7):
-        Egg(all_sprites, egg_group, 100)
+        Egg(100)
 
     Border(1, 1, 999, 1)
     Border(1, 799, 999, 799)
@@ -245,17 +259,13 @@ def game_process_level_2(screen):
 
     screen.fill((0, 0, 0))
 
-    def creating_second_door():
-        nonlocal second_door_is_active, create_second_door
-        print(1)
-        Door(9, 4, '2_1', 'blue_door_right.png')
-        second_door_is_active = True
-        create_second_door = False
-
     first_dialog_started = False
     swap_control = True
     create_second_door = True
     second_door_is_active = False
+    second_dialog_started = False
+    third_door_is_active = False
+    portal_is_active = False
 
     while True:  # главный игровой цикл
         for event in pygame.event.get():
@@ -272,13 +282,13 @@ def game_process_level_2(screen):
                     move(player, "right")
 
             if event.type == pygame.MOUSEBUTTONUP:
-                if player.pos == (5, 2) and \
+                if player.pos == (4, 2) and first_dialog_started and\
                         current_map_filename == map_filename_1:
                     if dialog_with_parrot.check_start_dialog():
                         dialog_with_parrot.next_string(screen)
 
-        # старт диалога
-        if not first_dialog_started and player.pos == (5, 2) and current_map_filename == map_filename_1:
+        # старт диалога 1
+        if not first_dialog_started and player.pos == (4, 2) and current_map_filename == map_filename_1:
             if dialog_with_parrot.check_start_dialog():
                 dialog_with_parrot.next_string(screen)
                 first_dialog_started = True
@@ -298,6 +308,37 @@ def game_process_level_2(screen):
             all_sprites.remove(door)
             doors_group.remove(door)
             second_door_is_active = False
+
+        # дверь 3
+        if player.pos == (0, 4) and current_map_filename == map_filename_3 and third_door_is_active:
+            door = get_door('3_1')
+            door.go_through_the_door()
+            all_sprites.remove(door)
+            doors_group.remove(door)
+            third_door_is_active = False
+            portal_is_active = True
+            Tile('portal.png', 4, 3)
+
+        # портал:
+        if portal_is_active and player.pos == (4, 3) and current_map_filename == map_filename_2:
+            break
+
+        # диалог 2
+        if level_map[player.pos[1]][player.pos[0]] == 'red_point.png' and \
+                current_map_filename == map_filename_3 and not second_dialog_started:
+            second_dialog_started = True
+            print('Второй диалог')
+            for _ in range(300):
+                screen.fill((random.randint(0, 255),
+                             random.randint(0, 255),
+                             random.randint(0, 255)))
+                clock.tick(FPS)
+                pygame.display.flip()
+            screen.fill((0, 0, 0))
+            player.be_ok()
+            print('Продолжение второго диалога')
+            swap_control = False
+            creating_third_door()
 
         tiles_group.draw(screen)
         doors_group.draw(screen)
