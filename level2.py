@@ -193,28 +193,30 @@ def game_process_level_2(screen):
     class Egg(pygame.sprite.Sprite):
         egg_image = load_image('world_design/characters/egg.png', scale_size=(50, 80))
 
-        def __init__(self, timer):
+        def __init__(self, count_of_hits):
             super().__init__(all_sprites, egg_group)
             self.image = Egg.egg_image
             self.rect = self.image.get_rect().move(600, 500)
             speeds = [-8, -7, -6, -5, 5, 6, 7, 8]
             self.vx = random.choice(speeds)
             self.vy = random.choice(speeds)
-            self.timer = timer
+            self.counter = count_of_hits
 
         def update(self):
-            self.timer -= 1
+
             self.rect = self.rect.move(self.vx, self.vy)
             if pygame.sprite.spritecollideany(self, horizontal_borders):
                 self.vy = -self.vy
+                self.counter -= 1
             if pygame.sprite.spritecollideany(self, vertical_borders):
                 self.vx = -self.vx
+                self.counter -= 1
 
             if pygame.sprite.spritecollideany(self, player_group):
                 player.damage(1)
                 self.vx = -self.vx
                 self.vy = -self.vy
-            if self.timer == 0:
+            if self.counter == 0:
                 self.kill()
 
     class Border(pygame.sprite.Sprite):
@@ -247,10 +249,12 @@ def game_process_level_2(screen):
     generate_level(level_map)
 
     dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog3.txt')
+    dialog_with_potato1 = Dialog(dialogs_group, 'data/dialogs/dialog4.txt')
+    dialog_with_potato2 = Dialog(dialogs_group, 'data/dialogs/dialog5.txt')
 
     eggs_started = False
     for i in range(7):
-        Egg(100)
+        Egg(4)
 
     Border(1, 1, 999, 1)
     Border(1, 799, 999, 799)
@@ -263,7 +267,8 @@ def game_process_level_2(screen):
     swap_control = True
     create_second_door = True
     second_door_is_active = False
-    second_dialog_started = False
+    second_dialog1_started = False
+    second_dialog2_started = False
     third_door_is_active = False
     portal_is_active = False
 
@@ -286,6 +291,16 @@ def game_process_level_2(screen):
                         current_map_filename == map_filename_1:
                     if dialog_with_parrot.check_start_dialog():
                         dialog_with_parrot.next_string(screen)
+
+                if player.pos == (8, 3) and second_dialog1_started and \
+                        current_map_filename == map_filename_3:
+                    if dialog_with_potato1.check_start_dialog():
+                        dialog_with_potato1.next_string(screen)
+
+                if player.pos == (8, 3) and second_dialog2_started and \
+                        current_map_filename == map_filename_3:
+                    if dialog_with_potato2.check_start_dialog():
+                        dialog_with_potato2.next_string(screen)
 
         # старт диалога 1
         if not first_dialog_started and player.pos == (4, 2) and current_map_filename == map_filename_1:
@@ -325,20 +340,28 @@ def game_process_level_2(screen):
 
         # диалог 2
         if level_map[player.pos[1]][player.pos[0]] == 'red_point.png' and \
-                current_map_filename == map_filename_3 and not second_dialog_started:
-            second_dialog_started = True
-            print('Второй диалог')
-            for _ in range(300):
-                screen.fill((random.randint(0, 255),
-                             random.randint(0, 255),
-                             random.randint(0, 255)))
-                clock.tick(FPS)
-                pygame.display.flip()
-            screen.fill((0, 0, 0))
-            player.be_ok()
-            print('Продолжение второго диалога')
-            swap_control = False
-            creating_third_door()
+            current_map_filename == map_filename_3:
+            if dialog_with_potato1.check_start_dialog() and not second_dialog1_started:
+                dialog_with_potato1.next_string(screen)
+                second_dialog1_started = True
+
+            if not dialog_with_potato1.check_start_dialog() and not second_dialog2_started:
+                for _ in range(300):
+                    screen.fill((random.randint(0, 255),
+                                 random.randint(0, 255),
+                                 random.randint(0, 255)))
+                    clock.tick(FPS)
+                    pygame.display.flip()
+                screen.fill((0, 0, 0))
+                player.be_ok()
+
+            if not dialog_with_potato1.check_start_dialog() and not second_dialog2_started:
+                dialog_with_potato2.next_string(screen)
+                second_dialog2_started = True
+
+            if not dialog_with_potato2.check_start_dialog() and swap_control:
+                swap_control = False
+                creating_third_door()
 
         tiles_group.draw(screen)
         doors_group.draw(screen)
