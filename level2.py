@@ -179,6 +179,7 @@ def game_process_level_2(screen):
             if door:
                 door.go_through_the_door()
                 # начало яиц
+                pass
 
         tiles_group.draw(screen)
         doors_group.draw(screen)
