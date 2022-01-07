@@ -6,4 +6,4 @@
 .	.	Sculture-2.png	.	box.png	.   .   .   .   .
 .	.	.	.	Tree-1-4.png	box.png	.   .   .   .
 .	.	.	.	.	box.png .   .   .   .
--1 -1
+8 0

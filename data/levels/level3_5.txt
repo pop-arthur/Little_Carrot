@@ -1,0 +1,9 @@
+.	.	.	box.png	box.png	blue_door_up.png-5_1	box.png	.	.	.
+.	Bush-4.png	.	Stone-1.png	Stone-1.png	.	Stone-1.png	.	Tree-1-4.png	.
+.	Tree-1-4.png	.	.	.	.	.	.	Tree-1-4.png	.
+.	Tree-1-4.png	.	Bush-4.png	.	Bush-4.png	.	Tree-1-4.png	Tree-1-4.png	.
+.	Tree-1-4.png	.	.	Flower-3.png	.	.	Tree-1-4.png	.	.
+.	Tree-1-4.png	.	Bush-4.png	.	Bush-4.png	.	Tree-1-4.png	.	Tree-1-4.png
+.	Tree-1-4.png	.	.	.	.	.	Tree-1-4.png	.	.
+bell.png-5_1	Tree-1-4.png	.	.	.	.	.	Tree-1-4.png	Bush-4.png	bell.png-5_2
+-1 -1
