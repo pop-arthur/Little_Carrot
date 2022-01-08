@@ -6,4 +6,4 @@ Big-wooden-fence-1.png	Big-wooden-fence-2.png	Big-wooden-fence-3.png	.	.	box.png
 .	Bush-4.png	Bush-4.png	Bush-4.png	Bush-4.png	box.png	.	Bush-4.png	Bush-4.png	Bush-4.png
 .	.	.	.	.	.	.	.	.	.
 .	Tree-1-4.png	Tree-1-4.png	.	blue_door_down.png-1_1	.	Tree-1-4.png	Tree-1-4.png	Tree-1-4.png	.
-4 6
+-1 -1

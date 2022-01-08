@@ -82,7 +82,6 @@ def game_process_level_3(screen):
                     player.heal(1)
                     tiles_group.remove(self)
 
-
     class Tip(pygame.sprite.Sprite):
         def __init__(self, text):
             super().__init__(tip_grooup)
@@ -97,11 +96,9 @@ def game_process_level_3(screen):
             self.place = self.output_text.get_rect(center=(500, 850))
             screen.blit(self.output_text, self.place)
 
-
         def clear(self):
             self.output_text.fill((0, 0, 0))
             screen.blit(self.output_text, self.place)
-
 
     class Bell(pygame.sprite.Sprite):
         bell_image = load_image('world_design/points/bell.png')
@@ -144,9 +141,10 @@ def game_process_level_3(screen):
                 self.tip.clear()
                 self.flag = True
 
-
     class Player(pygame.sprite.Sprite):
         player_ok_image = load_image('world_design/characters/gold_carrot_ok.png')
+        player_with_salt_image = load_image('world_design/characters/gold_carrot_with_salt.png')
+        player_with_flower_image = load_image('world_design/characters/gold_carrot_with_flower.png')
 
         def __init__(self, pos_x, pos_y):
             super().__init__(all_sprites, player_group)
@@ -164,6 +162,15 @@ def game_process_level_3(screen):
             if self.pos == (4, 2):
                 return True
             return False
+
+        def flower_image(self):
+            self.image = Player.player_with_flower_image
+
+        def salt_image(self):
+            self.image = Player.player_with_flower_image
+
+        def ok_image(self):
+            self.image = Player.player_ok_image
 
         def damage(self, count_of_damage):
             print('Вас ударило')
@@ -266,6 +273,37 @@ def game_process_level_3(screen):
                                 'blue_door_down.png-1_1', 'blue_door_right.png-2_1', 'blue_door_left.png-4_1',
                                 'blue_door_up.png-5_1'}
 
+    def check_story_status():
+        nonlocal story_status
+        if story_status == 'beet1' and player.pos == (9, 6) and current_map_filename == map_filename_4:
+            print('Диалог со свеклой 1')
+            story_status = 'watermelon1'
+        elif story_status == 'watermelon1' and player.pos == (1, 0) and current_map_filename == map_filename_1:
+            print('Диалог с арбузом 1')
+            story_status = 'pumpkin1'
+        elif story_status == 'pumpkin1' and player.pos == (0, 1) and current_map_filename == map_filename_2:
+            print('Диалог с тыквой 1')
+            possible_to_move_objects.add('Flower-3.png')
+            story_status = 'flower 1'
+        elif story_status == 'flower 1' and player.pos == (4, 4) and current_map_filename == map_filename_5:
+            flower = [elem for elem in tiles_group if elem.tile_type == 'Flower-3.png']
+            tiles_group.remove(flower)
+            player.flower_image()
+            story_status = 'pumpkin2'
+        elif story_status == 'pumpkin2' and player.pos == (0, 1) and current_map_filename == map_filename_2:
+            print('Диалог с тыквой 2')
+            player.salt_image()
+            story_status = 'beet2'
+        elif story_status == 'beet2' and player.pos == (9, 6) and current_map_filename == map_filename_4:
+            print('Диалог со свеклой 2')
+            player.ok_image()
+            story_status = 'apple1'
+        elif story_status == 'apple1' and player.pos == (8, 0) and current_map_filename == map_filename_1:
+            print('Диалог с яблоком')
+            # портал в центре третьей карты
+
+
+
     def move(movement):
         nonlocal level_map, player
         level_map = load_level(current_map_filename)[0]
@@ -305,6 +343,8 @@ def game_process_level_3(screen):
     dialog_with_apple = Dialog(dialogs_group, 'data/dialogs/dialog12.txt')
     dialog7_started = False
 
+    story_status = 'beet1'
+
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
     generate_level(level_map)
@@ -326,6 +366,7 @@ def game_process_level_3(screen):
                     move("right")
 
             if event.type == pygame.MOUSEBUTTONUP:
+                # штуки с диалогами в функцию
                 if dialog1_started and player.pos == (4, 3) and\
                         current_map_filename == map_filename_3:
                     if dialog_with_parrot.check_start_dialog():
@@ -340,9 +381,8 @@ def game_process_level_3(screen):
             dialog_with_parrot.next_string(screen)
             dialog1_started = True
 
-
-
         check_doors()
+        check_story_status()
 
         tiles_group.draw(screen)
         doors_group.draw(screen)
