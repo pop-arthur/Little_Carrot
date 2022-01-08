@@ -1,6 +1,7 @@
 from game_init_functions import *
 import pygame
 import random
+from dialogs import Dialog
 
 
 def game_process_level_3(screen):
@@ -26,6 +27,7 @@ def game_process_level_3(screen):
     doors_group = pygame.sprite.Group()
     dialogs_group = pygame.sprite.Group()
     bells_group = pygame.sprite.Group()
+    tip_grooup = pygame.sprite.Group()
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
@@ -80,24 +82,45 @@ def game_process_level_3(screen):
                     player.heal(1)
                     tiles_group.remove(self)
 
+
+    class Tip(pygame.sprite.Sprite):
+        def __init__(self, text):
+            super().__init__(tip_grooup)
+            self.text = text
+            self.font = pygame.font.Font(None, 35)
+            self.output_text = self.font.render(self.text, True, (255, 255, 255))
+            self.place = self.output_text.get_rect(center=(500, 850))
+
+        def print_tip(self):
+            self.clear()
+            self.output_text = self.font.render(self.text, True, (255, 255, 255))
+            self.place = self.output_text.get_rect(center=(500, 850))
+            screen.blit(self.output_text, self.place)
+
+
+        def clear(self):
+            self.output_text.fill((0, 0, 0))
+            screen.blit(self.output_text, self.place)
+
+
     class Bell(pygame.sprite.Sprite):
         bell_image = load_image('world_design/points/bell.png')
         bells_dict = {
             map_filename_1: {
-                '1_1': [(1, 0), ''],
-                '1_2': [(8, 0), '']
+                '1_1': [(1, 0), 'Здесь живет Арбуз'],
+                '1_2': [(8, 0), 'Здесь живет Яблоко']
             },
             map_filename_2: {
-                '2_1': [(0, 1), ''],
-                '2_2': [(0, 6), '']
+                '2_1': [(0, 1), 'Здесь живет Тыква'],
+                '2_2': [(0, 6), 'Здесь живет Гриб']
             },
             map_filename_4: {
-                '4_1': [(9, 1), ''],
-                '4_2': [(9, 6), '']
+                '4_1': [(9, 1), 'Здесь живет Сова'],
+                '4_2': [(9, 6), 'Здесь живет Свекла']
             },
             map_filename_5: {
-                '5_1': [(0, 6), ''],
-                '5_2': [(9, 6), '']
+                '5_1': [(0, 6), 'Здесь живет Осел'],
+                '5_2': [(9, 6), 'Здесь живет Шрек']
             }
         }
 
@@ -108,11 +131,19 @@ def game_process_level_3(screen):
             self.rect = self.image.get_rect().move(
                 tile_width * pos_x, tile_height * pos_y)
             self.bell_num = bell_num
+            self.flag = True
 
         def update(self):
             player_pos_to_print, text_to_print = Bell.bells_dict[current_map_filename][self.bell_num]
+
             if player.pos == player_pos_to_print:
-                print(self.bell_num)
+                self.tip = Tip(text_to_print)
+                self.tip.print_tip()
+                self.flag = False
+            if player.pos != player_pos_to_print and not self.flag:
+                self.tip.clear()
+                self.flag = True
+
 
     class Player(pygame.sprite.Sprite):
         player_ok_image = load_image('world_design/characters/gold_carrot_ok.png')
@@ -259,6 +290,21 @@ def game_process_level_3(screen):
         if level_map[player.pos[1]][player.pos[0]] == 'dirty_row.png':
             player.damage(1)
 
+    dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog6.txt')
+    dialog1_started = False
+    dialog_with_beet1 = Dialog(dialogs_group, 'data/dialogs/dialog7.txt')
+    dialog2_started = False
+    dialog_with_melon = Dialog(dialogs_group, 'data/dialogs/dialog8.txt')
+    dialog3_started = False
+    dialog_with_pumpkin1 = Dialog(dialogs_group, 'data/dialogs/dialog9.txt')
+    dialog4_started = False
+    dialog_with_pumpkin2 = Dialog(dialogs_group, 'data/dialogs/dialog10.txt')
+    dialog5_started = False
+    dialog_with_beet2 = Dialog(dialogs_group, 'data/dialogs/dialog11.txt')
+    dialog6_started = False
+    dialog_with_apple = Dialog(dialogs_group, 'data/dialogs/dialog12.txt')
+    dialog7_started = False
+
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
     generate_level(level_map)
@@ -278,6 +324,23 @@ def game_process_level_3(screen):
                     move("down")
                 if event.key == pygame.K_d:
                     move("right")
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                if dialog1_started and player.pos == (4, 3) and\
+                        current_map_filename == map_filename_3:
+                    if dialog_with_parrot.check_start_dialog():
+                        dialog_with_parrot.next_string(screen)
+
+                if dialog2_started and player.pos == (4, 3) and\
+                        current_map_filename == map_filename_4:
+                    if dialog_with_beet1.check_start_dialog():
+                        dialog_with_beet1.next_string(screen)
+
+        if player.pos == (4, 3) and not dialog1_started and current_map_filename == map_filename_3:
+            dialog_with_parrot.next_string(screen)
+            dialog1_started = True
+
+
 
         check_doors()
 
