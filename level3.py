@@ -48,6 +48,10 @@ def game_process_level_3(screen):
                        'red_point.png': [load_image('world_design/points/red_point.png'), (0, 0)],
                        'dirty_row.png': [load_image('world_design/Ground/dirty_row.png'), (0, 0)],
                        'parrot': [load_image('world_design/characters/parrot.png'), (0, 0)],
+                       'apple.png': [load_image('world_design/characters/apple.png'), (0, 0)],
+                       'beet.png': [load_image('world_design/characters/beet.png'), (0, 0)],
+                       'pumpkin.png': [load_image('world_design/characters/pumpkin.png'), (0, 0)],
+                       'watermelon.png': [load_image('world_design/characters/watermelon.png'), (0, 0)],
                        'Sculture-2.png': [load_image('world_design/Sculptures/Sculture-2.png'), (0, 0)],
                        'Sculpture-1.png': [load_image('world_design/Sculptures/Sculpture-1.png'), (0, 0)],
                        'box.png': [load_image('world_design/Stones/box.png'), (0, 0)],
@@ -102,6 +106,8 @@ def game_process_level_3(screen):
 
     class Bell(pygame.sprite.Sprite):
         bell_image = load_image('world_design/points/bell.png')
+        clear_image = load_image('world_design/characters/clear.png')
+
         bells_dict = {
             map_filename_1: {
                 '1_1': [(1, 0), 'Здесь живет Арбуз'],
@@ -141,6 +147,18 @@ def game_process_level_3(screen):
                 self.tip.clear()
                 self.flag = True
 
+        def hide(self):
+            self.image = Bell.clear_image
+
+        def show(self):
+            self.image = Bell.bell_image
+
+    def get_bell(bell_num):
+        result = [elem for elem in bells_group if elem.bell_num == bell_num]
+        if result:
+            return result[0]
+        return None
+
     class Player(pygame.sprite.Sprite):
         player_ok_image = load_image('world_design/characters/gold_carrot_ok.png')
         player_with_salt_image = load_image('world_design/characters/gold_carrot_with_salt.png')
@@ -167,7 +185,7 @@ def game_process_level_3(screen):
             self.image = Player.player_with_flower_image
 
         def salt_image(self):
-            self.image = Player.player_with_flower_image
+            self.image = Player.player_with_salt_image
 
         def ok_image(self):
             self.image = Player.player_ok_image
@@ -271,38 +289,73 @@ def game_process_level_3(screen):
     possible_to_move_objects = {'.', 'red_point.png', 'blue_door_left.png-3_4', 'dirty_row.png', 'heal.png',
                                 'blue_door_right.png-3_2', 'blue_door_down.png-3_3', 'blue_door_up.png-3_1',
                                 'blue_door_down.png-1_1', 'blue_door_right.png-2_1', 'blue_door_left.png-4_1',
-                                'blue_door_up.png-5_1'}
+                                'blue_door_up.png-5_1', 'portal.png'}
 
     def check_story_status():
-        nonlocal story_status
+        nonlocal story_status, running
         if story_status == 'beet1' and player.pos == (9, 6) and current_map_filename == map_filename_4:
+            bell = get_bell('4_2')
+            bell.hide()
+            character = Tile('beet.png', 9, 7)
             print('Диалог со свеклой 1')
+            tiles_group.remove(character)
+            bell.show()
             story_status = 'watermelon1'
         elif story_status == 'watermelon1' and player.pos == (1, 0) and current_map_filename == map_filename_1:
+            bell = get_bell('1_1')
+            bell.hide()
+            character = Tile('watermelon.png', 0, 0)
             print('Диалог с арбузом 1')
+            tiles_group.remove(character)
+            bell.show()
             story_status = 'pumpkin1'
         elif story_status == 'pumpkin1' and player.pos == (0, 1) and current_map_filename == map_filename_2:
+            bell = get_bell('2_1')
+            bell.hide()
+            character = Tile('pumpkin.png', 0, 0)
             print('Диалог с тыквой 1')
+            tiles_group.remove(character)
+            bell.show()
             possible_to_move_objects.add('Flower-3.png')
             story_status = 'flower 1'
         elif story_status == 'flower 1' and player.pos == (4, 4) and current_map_filename == map_filename_5:
-            flower = [elem for elem in tiles_group if elem.tile_type == 'Flower-3.png']
+            flower = [elem for elem in tiles_group if elem.tile_type == 'Flower-3.png'][0]
             tiles_group.remove(flower)
             player.flower_image()
             story_status = 'pumpkin2'
         elif story_status == 'pumpkin2' and player.pos == (0, 1) and current_map_filename == map_filename_2:
+            bell = get_bell('2_1')
+            bell.hide()
+            character = Tile('pumpkin.png', 0, 0)
             print('Диалог с тыквой 2')
+            tiles_group.remove(character)
+            bell.show()
             player.salt_image()
             story_status = 'beet2'
         elif story_status == 'beet2' and player.pos == (9, 6) and current_map_filename == map_filename_4:
+            bell = get_bell('4_2')
+            bell.hide()
+            character = Tile('beet.png', 9, 7)
             print('Диалог со свеклой 2')
+            tiles_group.remove(character)
+            bell.show()
             player.ok_image()
             story_status = 'apple1'
         elif story_status == 'apple1' and player.pos == (8, 0) and current_map_filename == map_filename_1:
+            bell = get_bell('1_2')
+            bell.hide()
+            character = Tile('apple.png', 9, 0)
             print('Диалог с яблоком')
+            tiles_group.remove(character)
+            bell.show()
+            player.ok_image()
             # портал в центре третьей карты
-
-
+            story_status = 'create portal'
+        elif story_status == 'create portal' and current_map_filename == map_filename_3:
+            Tile('portal.png', 4, 3)
+            story_status = 'go to portal'
+        elif story_status == 'go to portal' and player.pos == (4, 3) and current_map_filename == map_filename_3:
+            running = False
 
     def move(movement):
         nonlocal level_map, player
@@ -351,7 +404,8 @@ def game_process_level_3(screen):
 
     screen.fill((0, 0, 0))
 
-    while True:  # главный игровой цикл
+    running = True
+    while running:  # главный игровой цикл
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
