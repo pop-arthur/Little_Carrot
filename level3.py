@@ -48,7 +48,7 @@ def game_process_level_3(screen):
                        'red_point.png': [load_image('world_design/points/red_point.png'), (0, 0)],
                        'dirty_row.png': [load_image('world_design/Ground/dirty_row.png'), (0, 0)],
                        'parrot': [load_image('world_design/characters/parrot.png'), (0, 0)],
-                       'apple.png': [load_image('world_design/characters/apple.png'), (0, 0)],
+                       'apple.png': [load_image('world_design/characters/apple.png', color_key=-1), (0, 0)],
                        'beet.png': [load_image('world_design/characters/beet.png'), (0, 0)],
                        'pumpkin.png': [load_image('world_design/characters/pumpkin.png'), (0, 0)],
                        'watermelon.png': [load_image('world_design/characters/watermelon.png'), (0, 0)],
@@ -167,6 +167,7 @@ def game_process_level_3(screen):
         player_ok_image = load_image('world_design/characters/gold_carrot_ok.png')
         player_with_salt_image = load_image('world_design/characters/gold_carrot_with_salt.png')
         player_with_flower_image = load_image('world_design/characters/gold_carrot_with_flower.png')
+        player_with_gun_image = load_image('world_design/characters/gold_carrot_with_gun.png')
 
         def __init__(self, pos_x, pos_y):
             super().__init__(all_sprites, player_group)
@@ -193,6 +194,9 @@ def game_process_level_3(screen):
 
         def ok_image(self):
             self.image = Player.player_ok_image
+
+        def gun_image(self):
+            self.image = Player.gun_image
 
         def damage(self, count_of_damage):
             print('Вас ударило')
@@ -357,7 +361,7 @@ def game_process_level_3(screen):
             if not dialog_with_apple2.check_start_dialog():
                 tiles_group.update('remove apple')
                 bell.show()
-                player.ok_image()
+                player.gun_image()
                 # портал в центре третьей карты
                 story_status = 'create portal'
             return 'beet1'

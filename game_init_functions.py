@@ -19,8 +19,7 @@ def load_image(name, color_key=None, scale_size=(100, 100)):
             color_key = image.get_at((0, 0))
         image.set_colorkey(color_key)
     else:
-        #image = image.convert_alpha()
-        pass
+        image = image.convert_alpha()
 
     if scale_size:
         image = pygame.transform.scale(image, scale_size)
