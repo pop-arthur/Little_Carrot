@@ -364,7 +364,7 @@ def game_process_level_3(screen):
                 player.gun_image()
                 # портал в центре третьей карты
                 story_status = 'create portal'
-            return 'beet1'
+            return 'apple1'
         elif story_status == 'create portal' and current_map_filename == map_filename_3:
             Tile('portal.png', 4, 3)
             story_status = 'go to portal'
@@ -450,6 +450,7 @@ def game_process_level_3(screen):
                     if dialog_with_beet1.check_start_dialog():
                         dialog_with_beet1.next_string(screen)
                     else:
+                        dialog2_started = False
                         dialog_status = False
 
                 if dialog3_started and dialog_with_melon.check_position(player.pos, screen) and\
@@ -477,6 +478,7 @@ def game_process_level_3(screen):
                         current_map_filename == map_filename_4:
                     if dialog_with_beet2.check_start_dialog():
                         dialog_with_beet2.next_string(screen)
+                        dialog_status = True
                     else:
                         dialog_status = False
 
