@@ -150,7 +150,7 @@ def game_process_level_1(screen):
     red_rect = RedRect(pos[0], pos[1])
     rect_group.add(red_rect)
     counter_1, counter_2 = 0, 0
-    flag = False
+    sprites_collide = False
 
 
     dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog1.txt')
@@ -178,14 +178,14 @@ def game_process_level_1(screen):
         tiles_group.update()
         draw_lines(screen)
         grass = load_image('world_design/Ground/Dark-grass-1.png')
-        if flag is True and counter_1 <= 9:
+        if sprites_collide is True and counter_1 <= 9:
             rect_group.clear(screen, grass)
             pygame.display.update()
             counter_1 += 1
-        flag = False
+        sprites_collide = False
 
         if pygame.sprite.spritecollide(player, rect_group, True):
-            flag = True
+            sprites_collide = True
 
         elif counter_1 > counter_2:
             pos = create_right_pos()
