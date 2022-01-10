@@ -197,7 +197,7 @@ def game_process_level_2(screen):
             super().__init__(all_sprites, egg_group)
             self.image = Egg.egg_image
             self.rect = self.image.get_rect().move(600, 500)
-            speeds = [-8, -7, -6, -5, 5, 6, 7, 8]
+            speeds = [ -6, -5, -4, -3, -2, 2, 3, 4, 5, 6]
             self.vx = random.choice(speeds)
             self.vy = random.choice(speeds)
             self.counter = count_of_hits
@@ -216,6 +216,7 @@ def game_process_level_2(screen):
                 player.damage(1)
                 self.vx = -self.vx
                 self.vy = -self.vy
+                self.kill()
             if self.counter == 0:
                 self.kill()
 
@@ -253,7 +254,7 @@ def game_process_level_2(screen):
     dialog_with_potato2 = Dialog(dialogs_group, 'data/dialogs/dialog5.txt')
 
     eggs_started = False
-    for i in range(7):
+    for i in range(9):
         Egg(4)
 
     Border(1, 1, 999, 1)
