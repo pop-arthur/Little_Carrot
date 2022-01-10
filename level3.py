@@ -297,10 +297,10 @@ def game_process_level_3(screen):
             bell = get_bell('4_2')
             bell.hide()
             character = Tile('beet.png', 9, 7)
-            print('Диалог со свеклой 1')
-            tiles_group.remove(character)
-            bell.show()
-            story_status = 'watermelon1'
+            if not dialog_with_beet1.check_start_dialog():
+                tiles_group.remove(character)
+                bell.show()
+                story_status = 'watermelon1'
             return  'beet1'
         elif story_status == 'watermelon1' and player.pos == (1, 0) and current_map_filename == map_filename_1:
             bell = get_bell('1_1')
@@ -486,32 +486,32 @@ def game_process_level_3(screen):
 
         status = check_story_status()
 
-        if status == 'beet1':
+        if status == 'beet1' and not dialog2_started:
             dialog_with_beet1.next_string(screen)
             dialog2_started = True
             dialog_status = True
 
-        elif status == 'watermelon1':
+        elif status == 'watermelon1' and not dialog3_started:
             dialog_with_melon.next_string(screen)
             dialog3_started = True
             dialog_status = True
 
-        elif status == 'pumpkin1':
+        elif status == 'pumpkin1' and not dialog4_started:
             dialog_with_pumpkin1.next_string(screen)
             dialog4_started = True
             dialog_status = True
 
-        elif status == 'pumpkin2':
+        elif status == 'pumpkin2' and not dialog5_started:
             dialog_with_pumpkin2.next_string(screen)
             dialog5_started = True
             dialog_status = True
 
-        elif status == 'beet2':
+        elif status == 'beet2' and not dialog6_started:
             dialog_with_beet2.next_string(screen)
             dialog6_started = True
             dialog_status = True
 
-        elif status == 'apple1':
+        elif status == 'apple1' and not dialog7_started:
             dialog_with_apple2.next_string(screen)
             dialog7_started = True
             dialog_status = True
