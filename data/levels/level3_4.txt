@@ -6,4 +6,4 @@ blue_door_left.png-4_1	.	box.png	.	box.png	.	box.png	.	box.png	.
 box.png	.	dirty_row.png	.	box.png	.	box.png	.	box.png	.
 box.png	.	box.png	.	box.png	.	.	.	box.png	.
 heal.png	.	.	.	box.png	box.png	box.png	box.png	box.png	bell.png-4_2
--1 -1
+7 4

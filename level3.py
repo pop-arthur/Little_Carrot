@@ -85,6 +85,10 @@ def game_process_level_3(screen):
                 if player.pos == self.pos:
                     player.heal(1)
                     tiles_group.remove(self)
+            elif len(args) == 1 and args[0].startswith('remove '):
+                obj = args[0].split()[1]
+                if obj in self.tile_type:
+                    tiles_group.remove(self)
 
     class Tip(pygame.sprite.Sprite):
         def __init__(self, text):
@@ -296,30 +300,30 @@ def game_process_level_3(screen):
         if story_status == 'beet1' and player.pos == (9, 6) and current_map_filename == map_filename_4:
             bell = get_bell('4_2')
             bell.hide()
-            character = Tile('beet.png', 9, 7)
+            Tile('beet.png', 9, 7)
             if not dialog_with_beet1.check_start_dialog():
-                tiles_group.remove(character)
+                tiles_group.update('remove beet')
                 bell.show()
                 story_status = 'watermelon1'
-            return  'beet1'
+            return 'beet1'
         elif story_status == 'watermelon1' and player.pos == (1, 0) and current_map_filename == map_filename_1:
             bell = get_bell('1_1')
             bell.hide()
-            character = Tile('watermelon.png', 0, 0)
-            print('Диалог с арбузом 1')
-            tiles_group.remove(character)
-            bell.show()
-            story_status = 'pumpkin1'
+            Tile('watermelon.png', 0, 0)
+            if not dialog_with_melon.check_start_dialog():
+                tiles_group.update('remove watermelon')
+                bell.show()
+                story_status = 'pumpkin1'
             return 'watermelon1'
         elif story_status == 'pumpkin1' and player.pos == (0, 1) and current_map_filename == map_filename_2:
             bell = get_bell('2_1')
             bell.hide()
-            character = Tile('pumpkin.png', 0, 0)
-            print('Диалог с тыквой 1')
-            tiles_group.remove(character)
-            bell.show()
-            possible_to_move_objects.add('Flower-3.png')
-            story_status = 'flower 1'
+            Tile('pumpkin.png', 0, 0)
+            if not dialog_with_pumpkin1.check_start_dialog():
+                tiles_group.update('remove pumpkin')
+                bell.show()
+                possible_to_move_objects.add('Flower-3.png')
+                story_status = 'flower 1'
             return 'pumpkin1'
         elif story_status == 'flower 1' and player.pos == (4, 4) and current_map_filename == map_filename_5:
             flower = [elem for elem in tiles_group if elem.tile_type == 'Flower-3.png'][0]
@@ -329,34 +333,33 @@ def game_process_level_3(screen):
         elif story_status == 'pumpkin2' and player.pos == (0, 1) and current_map_filename == map_filename_2:
             bell = get_bell('2_1')
             bell.hide()
-            character = Tile('pumpkin.png', 0, 0)
-            print('Диалог с тыквой 2')
-            tiles_group.remove(character)
-            bell.show()
-            player.salt_image()
-            story_status = 'beet2'
+            Tile('pumpkin.png', 0, 0)
+            if not dialog_with_pumpkin2.check_start_dialog():
+                tiles_group.update('remove pumpkin')
+                bell.show()
+                player.salt_image()
+                story_status = 'beet2'
             return 'pumpkin2'
         elif story_status == 'beet2' and player.pos == (9, 6) and current_map_filename == map_filename_4:
             bell = get_bell('4_2')
             bell.hide()
-            character = Tile('beet.png', 9, 7)
-            print('Диалог со свеклой 2')
-            tiles_group.remove(character)
-            bell.show()
-            player.ok_image()
-            story_status = 'apple1'
+            Tile('beet.png', 9, 7)
+            if not dialog_with_beet2.check_start_dialog():
+                tiles_group.update('remove beet')
+                bell.show()
+                player.ok_image()
+                story_status = 'apple1'
             return 'beet2'
         elif story_status == 'apple1' and player.pos == (8, 0) and current_map_filename == map_filename_1:
             bell = get_bell('1_2')
             bell.hide()
-            character = Tile('apple.png', 9, 0)
-            print('Диалог с яблоком')
-            tiles_group.remove(character)
-            bell.show()
-            player.ok_image()
-
-            # портал в центре третьей карты
-            story_status = 'create portal'
+            Tile('apple.png', 9, 0)
+            if not dialog_with_apple2.check_start_dialog():
+                tiles_group.update('remove apple')
+                bell.show()
+                player.ok_image()
+                # портал в центре третьей карты
+                story_status = 'create portal'
             return 'beet1'
         elif story_status == 'create portal' and current_map_filename == map_filename_3:
             Tile('portal.png', 4, 3)
