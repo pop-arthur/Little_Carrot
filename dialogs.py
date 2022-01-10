@@ -9,12 +9,13 @@ def get_text(file_name):
 
 
 class Dialog(pygame.sprite.Sprite):
-    def __init__(self, group, file_name):
+    def __init__(self, group, file_name, position):
         super().__init__(group)
         self.text = get_text(file_name)
         self.font = pygame.font.Font(None, 35)
         self.cell_text = 0
         self.flag = True
+        self.pos = position
 
     def next_string(self, screen):
         self.clear(screen)
@@ -28,6 +29,12 @@ class Dialog(pygame.sprite.Sprite):
         if self.cell_text > 0:
             self.output_text.fill((0, 0, 0))
             screen.blit(self.output_text, self.place)
+
+    def check_position(self, player_pos, screen):
+        if player_pos != self.pos:
+            self.clear(screen)
+            return False
+        return True
 
     def check_start_dialog(self):
         if self.cell_text + 1 > len(self.text):

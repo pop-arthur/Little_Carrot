@@ -301,6 +301,7 @@ def game_process_level_3(screen):
             tiles_group.remove(character)
             bell.show()
             story_status = 'watermelon1'
+            return  'beet1'
         elif story_status == 'watermelon1' and player.pos == (1, 0) and current_map_filename == map_filename_1:
             bell = get_bell('1_1')
             bell.hide()
@@ -309,6 +310,7 @@ def game_process_level_3(screen):
             tiles_group.remove(character)
             bell.show()
             story_status = 'pumpkin1'
+            return 'watermelon1'
         elif story_status == 'pumpkin1' and player.pos == (0, 1) and current_map_filename == map_filename_2:
             bell = get_bell('2_1')
             bell.hide()
@@ -318,6 +320,7 @@ def game_process_level_3(screen):
             bell.show()
             possible_to_move_objects.add('Flower-3.png')
             story_status = 'flower 1'
+            return 'pumpkin1'
         elif story_status == 'flower 1' and player.pos == (4, 4) and current_map_filename == map_filename_5:
             flower = [elem for elem in tiles_group if elem.tile_type == 'Flower-3.png'][0]
             tiles_group.remove(flower)
@@ -332,6 +335,7 @@ def game_process_level_3(screen):
             bell.show()
             player.salt_image()
             story_status = 'beet2'
+            return 'pumpkin2'
         elif story_status == 'beet2' and player.pos == (9, 6) and current_map_filename == map_filename_4:
             bell = get_bell('4_2')
             bell.hide()
@@ -341,6 +345,7 @@ def game_process_level_3(screen):
             bell.show()
             player.ok_image()
             story_status = 'apple1'
+            return 'beet2'
         elif story_status == 'apple1' and player.pos == (8, 0) and current_map_filename == map_filename_1:
             bell = get_bell('1_2')
             bell.hide()
@@ -349,13 +354,17 @@ def game_process_level_3(screen):
             tiles_group.remove(character)
             bell.show()
             player.ok_image()
+
             # портал в центре третьей карты
             story_status = 'create portal'
+            return 'beet1'
         elif story_status == 'create portal' and current_map_filename == map_filename_3:
             Tile('portal.png', 4, 3)
             story_status = 'go to portal'
         elif story_status == 'go to portal' and player.pos == (4, 3) and current_map_filename == map_filename_3:
             running = False
+        else:
+            return False
 
     def move(movement):
         nonlocal level_map, player
@@ -381,22 +390,23 @@ def game_process_level_3(screen):
         if level_map[player.pos[1]][player.pos[0]] == 'dirty_row.png':
             player.damage(1)
 
-    dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog6.txt')
+    dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog6.txt', (4, 3))
     dialog1_started = False
-    dialog_with_beet1 = Dialog(dialogs_group, 'data/dialogs/dialog7.txt')
+    dialog_with_beet1 = Dialog(dialogs_group, 'data/dialogs/dialog7.txt', (9, 6))
     dialog2_started = False
-    dialog_with_melon = Dialog(dialogs_group, 'data/dialogs/dialog8.txt')
+    dialog_with_melon = Dialog(dialogs_group, 'data/dialogs/dialog8.txt', (1, 0))
     dialog3_started = False
-    dialog_with_pumpkin1 = Dialog(dialogs_group, 'data/dialogs/dialog9.txt')
+    dialog_with_pumpkin1 = Dialog(dialogs_group, 'data/dialogs/dialog9.txt', (0, 1))
     dialog4_started = False
-    dialog_with_pumpkin2 = Dialog(dialogs_group, 'data/dialogs/dialog10.txt')
+    dialog_with_pumpkin2 = Dialog(dialogs_group, 'data/dialogs/dialog10.txt', (0, 1))
     dialog5_started = False
-    dialog_with_beet2 = Dialog(dialogs_group, 'data/dialogs/dialog11.txt')
+    dialog_with_beet2 = Dialog(dialogs_group, 'data/dialogs/dialog11.txt', (9, 6))
     dialog6_started = False
-    dialog_with_apple = Dialog(dialogs_group, 'data/dialogs/dialog12.txt')
+    dialog_with_apple2 = Dialog(dialogs_group, 'data/dialogs/dialog12.txt', (8, 0))
     dialog7_started = False
 
     story_status = 'beet1'
+    dialog_status = False
 
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
@@ -421,29 +431,100 @@ def game_process_level_3(screen):
 
             if event.type == pygame.MOUSEBUTTONUP:
                 # штуки с диалогами в функцию
-                if dialog1_started and player.pos == (4, 3) and\
+                if dialog1_started and dialog_with_parrot.check_position(player.pos, screen) and\
                         current_map_filename == map_filename_3:
                     if dialog_with_parrot.check_start_dialog():
                         dialog_with_parrot.next_string(screen)
+                    else:
+                        dialog_status = False
 
-                if dialog2_started and player.pos == (4, 3) and\
+                if dialog2_started and dialog_with_beet1.check_position(player.pos, screen) and\
                         current_map_filename == map_filename_4:
                     if dialog_with_beet1.check_start_dialog():
                         dialog_with_beet1.next_string(screen)
+                    else:
+                        dialog_status = False
+
+                if dialog3_started and dialog_with_melon.check_position(player.pos, screen) and\
+                        current_map_filename == map_filename_1:
+                    if dialog_with_melon.check_start_dialog():
+                        dialog_with_melon.next_string(screen)
+                    else:
+                        dialog_status = False
+
+                if dialog4_started and dialog_with_pumpkin1.check_position(player.pos, screen) and\
+                        current_map_filename == map_filename_2:
+                    if dialog_with_pumpkin1.check_start_dialog():
+                        dialog_with_pumpkin1.next_string(screen)
+                    else:
+                        dialog_status = False
+
+                if dialog5_started and dialog_with_pumpkin2.check_position(player.pos, screen) and\
+                        current_map_filename == map_filename_2:
+                    if dialog_with_pumpkin2.check_start_dialog():
+                        dialog_with_pumpkin2.next_string(screen)
+                    else:
+                        dialog_status = False
+
+                if dialog6_started and dialog_with_beet2.check_position(player.pos, screen) and\
+                        current_map_filename == map_filename_4:
+                    if dialog_with_beet2.check_start_dialog():
+                        dialog_with_beet2.next_string(screen)
+                    else:
+                        dialog_status = False
+
+                if dialog7_started and dialog_with_apple2.check_position(player.pos, screen) and\
+                        current_map_filename == map_filename_1:
+                    if dialog_with_apple2.check_start_dialog():
+                        dialog_with_apple2.next_string(screen)
+                    else:
+                        dialog_status = False
 
         if player.pos == (4, 3) and not dialog1_started and current_map_filename == map_filename_3:
             dialog_with_parrot.next_string(screen)
             dialog1_started = True
 
+        status = check_story_status()
+
+        if status == 'beet1':
+            dialog_with_beet1.next_string(screen)
+            dialog2_started = True
+            dialog_status = True
+
+        elif status == 'watermelon1':
+            dialog_with_melon.next_string(screen)
+            dialog3_started = True
+            dialog_status = True
+
+        elif status == 'pumpkin1':
+            dialog_with_pumpkin1.next_string(screen)
+            dialog4_started = True
+            dialog_status = True
+
+        elif status == 'pumpkin2':
+            dialog_with_pumpkin2.next_string(screen)
+            dialog5_started = True
+            dialog_status = True
+
+        elif status == 'beet2':
+            dialog_with_beet2.next_string(screen)
+            dialog6_started = True
+            dialog_status = True
+
+        elif status == 'apple1':
+            dialog_with_apple2.next_string(screen)
+            dialog7_started = True
+            dialog_status = True
+
         check_doors()
-        check_story_status()
 
         tiles_group.draw(screen)
         doors_group.draw(screen)
         bells_group.draw(screen)
         player_group.draw(screen)
         tiles_group.update()
-        bells_group.update()
+        if not dialog_status:
+            bells_group.update()
         draw_lines(screen)
 
         pygame.display.flip()
