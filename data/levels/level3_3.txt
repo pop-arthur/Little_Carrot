@@ -1,0 +1,9 @@
+Sculpture-1.png	.	heal.png	box.png	blue_door_up.png-3_1	.	Tree-1-4.png	Tree-1-4.png	Tree-1-4.png	.
+.	.	Tree-1-4.png	dirty_row.png	.	.	.	.	.	.
+.	.	.	.	box.png	box.png	box.png	heal.png	.	Sculture-2.png
+Tree-1-4.png	.	Stone-1.png	.	.	parrot	box.png	.	.	blue_door_right.png-3_2
+blue_door_left.png-3_4	.	box.png	Tree-1-4.png	box.png	box.png	box.png	box.png	.	Sculture-2.png
+Tree-1-4.png	.	.	.	.	.	box.png	.	.	.
+.	.	Stone-1.png	Stone-1.png	dirty_row.png	.	.	.	box.png	.
+Sculpture-1.png	.	.	heal.png	box.png	blue_door_down.png-3_3	Stone-1.png	.	box.png	heal.png
+-1 -1

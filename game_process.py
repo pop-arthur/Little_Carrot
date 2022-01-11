@@ -12,7 +12,7 @@ def init_game():
     #show_start_credits(screen)
 
     #game_process_level_1(screen)
-    game_process_level_2(screen)
+    #game_process_level_2(screen)
     game_process_level_3(screen)
 
     show_end_credits(screen)

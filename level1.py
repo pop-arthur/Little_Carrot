@@ -128,7 +128,7 @@ def game_process_level_1(screen):
         pygame.display.flip()
         clock.tick(FPS)
 
-    dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog1.txt')
+    dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog1.txt', (4, 2))
     screen.fill((0, 0, 0))
     while True:  # главный игровой цикл
         for event in pygame.event.get():

@@ -106,6 +106,9 @@ def game_process_level_2(screen):
         def damage(self, count_of_damage):
             print('Вас ударило')
 
+        def heal(self, count_of_heal):
+            print('Подлечились!')
+
     class Door(pygame.sprite.Sprite):
         doors_dict = {'1_1': [map_filename_2, (0, 4)],
                       '2_1': [map_filename_3, (0, 4)],
