@@ -1,6 +1,6 @@
 .	.	.	.	.	.	.	.	.	.
 .	.	Bush-4.png	Big-wooden-fence-1.png	Big-wooden-fence-2.png	Big-wooden-fence-2.png	Big-wooden-fence-3.png	Bush-4.png	.	.
-.	.	.	.	carrot	parrot	.	.	.	.
+.	.	.	.	.	parrot	.	.	.	.
 .	.	.	.	.	.	.	.	.	.
 .	.	.	.	.	.	.	.	.	.
 .	.	.	.	.	.	Stone-1.png	.	.	.

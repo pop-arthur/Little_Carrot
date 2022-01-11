@@ -64,6 +64,7 @@ def game_process_level_1(screen):
     tiles_group = pygame.sprite.Group()
     player_group = pygame.sprite.Group()
     dialogs_group = pygame.sprite.Group()
+    rect_group = pygame.sprite.Group()
 
     tile_images = {'empty': ['', (0, 0)],
                    'Bush-4.png': [load_image('world_design/Bushes/Bush-4.png', scale_size=(74, 74)), (13, 35)],
@@ -80,6 +81,15 @@ def game_process_level_1(screen):
                    'Stone-1.png': [load_image('world_design/Stones/Stone-1.png', scale_size=(74, 90)), (13, 10)]}
     player_image = load_image('world_design/characters/gold_carrot_ok.png')
 
+
+    class RedRect(pygame.sprite.Sprite):
+        def __init__(self, pos_x, pos_y):
+            super().__init__(all_sprites, player_group)
+            self.image = pygame.Surface((90, 90))
+            self.image.fill("red")
+            pygame.transform.scale(self.image, (100, 100))
+            self.rect = self.image.get_rect().move(pos_x, pos_y)
+
     def generate_level(level):
         new_player, x, y = None, None, None
         for y in range(len(level)):
@@ -93,6 +103,7 @@ def game_process_level_1(screen):
                     Tile(level[y][x], x, y)
 
         # вернем игрока, а также размер поля в клетках
+        return new_player, len(level[0]), len(level)
 
     def move(player, movement):
         nonlocal level_map
@@ -128,6 +139,22 @@ def game_process_level_1(screen):
         pygame.display.flip()
         clock.tick(FPS)
 
+    def create_right_pos():
+        pos_x, pos_y = random.choice(list_of_x), random.choice(list_of_y)
+        while (pos_x in [206, 306, 406, 506, 606, 706] and pos_y == 106) or (pos_x == 306 and pos_y == 806) or \
+                (pos_x == 506 and pos_y == 206) or (pos_x == 606 and pos_y == 506):
+            pos_x, pos_y = random.choice(list_of_x), random.choice(list_of_y)
+        return pos_x, pos_y
+
+    list_of_x = [5, 106, 206, 306, 406, 506, 606, 706, 806, 906]
+    list_of_y = [5, 106, 206, 306, 406, 506, 606, 706]
+    pos = create_right_pos()
+    red_rect = RedRect(pos[0], pos[1])
+    rect_group.add(red_rect)
+    counter_1, counter_2 = 0, 0
+    sprites_collide = False
+
+
     dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog1.txt', (4, 2))
     screen.fill((0, 0, 0))
     while True:  # главный игровой цикл
@@ -151,6 +178,21 @@ def game_process_level_1(screen):
         player_group.draw(screen)
         tiles_group.update()
         draw_lines(screen)
+        grass = load_image('world_design/Ground/Dark-grass-1.png')
+        if sprites_collide is True and counter_1 <= 9:
+            rect_group.clear(screen, grass)
+            pygame.display.update()
+            counter_1 += 1
+        sprites_collide = False
+
+        if pygame.sprite.spritecollide(player, rect_group, True):
+            sprites_collide = True
+
+        elif counter_1 > counter_2:
+            pos = create_right_pos()
+            rect_group.add(RedRect(pos[0], pos[1]))
+            rect_group.draw(screen)
+            counter_2 += 1
         pygame.display.flip()
         clock.tick(FPS)
 
