@@ -81,10 +81,10 @@ def game_process_level_1(screen):
                    'Stone-1.png': [load_image('world_design/Stones/Stone-1.png', scale_size=(74, 90)), (13, 10)]}
     player_image = load_image('world_design/characters/gold_carrot_ok.png')
 
-
     class RedRect(pygame.sprite.Sprite):
         def __init__(self, pos_x, pos_y):
             super().__init__(all_sprites, player_group)
+            # self.image = load_image('world_design/points/red_point.png', scale_size=(90, 90))
             self.image = pygame.Surface((90, 90))
             self.image.fill("red")
             pygame.transform.scale(self.image, (100, 100))
@@ -153,9 +153,10 @@ def game_process_level_1(screen):
     rect_group.add(red_rect)
     counter_1, counter_2 = 0, 0
     sprites_collide = False
-
+    start_apple = False
 
     dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog1.txt', (4, 2))
+
     screen.fill((0, 0, 0))
     while True:  # главный игровой цикл
         for event in pygame.event.get():
@@ -183,6 +184,9 @@ def game_process_level_1(screen):
             rect_group.clear(screen, grass)
             pygame.display.update()
             counter_1 += 1
+        elif sprites_collide and counter_1 >= 10:
+            start_apple = True
+
         sprites_collide = False
 
         if pygame.sprite.spritecollide(player, rect_group, True):
@@ -193,6 +197,7 @@ def game_process_level_1(screen):
             rect_group.add(RedRect(pos[0], pos[1]))
             rect_group.draw(screen)
             counter_2 += 1
+
         pygame.display.flip()
         clock.tick(FPS)
 

@@ -196,7 +196,7 @@ def game_process_level_3(screen):
             self.image = Player.player_ok_image
 
         def gun_image(self):
-            self.image = Player.gun_image
+            self.image = Player.player_with_gun_image
 
         def damage(self, count_of_damage):
             print('Вас ударило')

@@ -21,6 +21,7 @@ def game_process_level_4(screen):
     player_group = pygame.sprite.Group()
     dialogs_group = pygame.sprite.Group()
     tip_grooup = pygame.sprite.Group()
+    scarecrows_group = pygame.sprite.Group()
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
@@ -46,7 +47,6 @@ def game_process_level_4(screen):
                        'pumpkin.png': [load_image('world_design/characters/pumpkin.png'), (0, 0)],
                        'watermelon.png': [load_image('world_design/characters/watermelon.png'), (0, 0)],
                        'dog.png': [load_image('world_design/characters/dog.png'), (0, 0)],
-                       'scarecrow.png': [load_image('world_design/characters/scarecrow.png', scale_size=(90, 90)), (5, 5)],
                        'Sculture-2.png': [load_image('world_design/Sculptures/Sculture-2.png'), (0, 0)],
                        'Sculpture-1.png': [load_image('world_design/Sculptures/Sculpture-1.png'), (0, 0)],
                        'box.png': [load_image('world_design/Stones/box.png'), (0, 0)],
@@ -80,6 +80,16 @@ def game_process_level_4(screen):
                 if player.pos == self.pos:
                     player.heal(1)
                     tiles_group.remove(self)
+
+    class Scarecrow(pygame.sprite.Sprite):
+        image = load_image('world_design/characters/scarecrow.png', scale_size=(90, 90))
+
+        def __init__(self, pos_x, pos_y):
+            super().__init__(all_sprites, scarecrows_group)
+            self.pos = (pos_x, pos_y)
+            self.image = Scarecrow.image
+            self.rect = self.image.get_rect().move(
+                tile_width * pos_x + 5, tile_height * pos_y + 5)
 
     class Tip(pygame.sprite.Sprite):
         def __init__(self, text):
@@ -131,6 +141,8 @@ def game_process_level_4(screen):
                 Tile('empty', x, y)
                 if level[y][x] == '.':
                     pass
+                elif level[y][x] == 'scarecrow.png':
+                    Scarecrow(x, y)
                 else:
                     Tile(level[y][x], x, y)
 
@@ -191,6 +203,8 @@ def game_process_level_4(screen):
 
         tiles_group.draw(screen)
         player_group.draw(screen)
+        scarecrows_group.draw(screen)
+        scarecrows_group.update()
         tiles_group.update()
         draw_lines(screen)
 

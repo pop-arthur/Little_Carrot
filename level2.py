@@ -252,9 +252,9 @@ def game_process_level_2(screen):
     player.be_flattened()
     generate_level(level_map)
 
-    dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog3.txt')
-    dialog_with_potato1 = Dialog(dialogs_group, 'data/dialogs/dialog4.txt')
-    dialog_with_potato2 = Dialog(dialogs_group, 'data/dialogs/dialog5.txt')
+    dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog3.txt', (4, 2))
+    dialog_with_potato1 = Dialog(dialogs_group, 'data/dialogs/dialog4.txt', (8, 3))
+    dialog_with_potato2 = Dialog(dialogs_group, 'data/dialogs/dialog5.txt', (8, 3))
 
     eggs_started = False
     for i in range(9):
