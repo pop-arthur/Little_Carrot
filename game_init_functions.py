@@ -20,6 +20,7 @@ def load_image(name, color_key=None, scale_size=(100, 100)):
         image.set_colorkey(color_key)
     else:
         image = image.convert_alpha()
+        pass
 
     if scale_size:
         image = pygame.transform.scale(image, scale_size)
