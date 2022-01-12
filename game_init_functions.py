@@ -54,11 +54,9 @@ def set_tile(filename, tile_type, pos):
         data = map_file.readlines()
 
     data = list(map(str.split, data))
-    print(data, pos, sep='\n')
     data[pos[1]][pos[0]] = tile_type
     data = ['\t'.join(elem) for elem in data[:-1]] + [' '.join(data[-1])]
     data = '\n'.join(data)
-    print(data)
     with open(filename, "w", encoding="utf-8") as map_file:
         map_file.write(data)
 

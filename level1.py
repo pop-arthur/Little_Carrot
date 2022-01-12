@@ -124,7 +124,6 @@ def game_process_level_1(screen):
             if x < max_x and level_map[y][x + 1] == ".":
                 player.move(x + 1, y)
 
-        change_player_pos_on_map(map_filename, player.pos)
         level_map = load_level(map_filename)
 
     level_map, player_pos = load_level(map_filename)
@@ -158,6 +157,7 @@ def game_process_level_1(screen):
 
     dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog1.txt', (4, 2))
     dialog_with_apple = Dialog(dialogs_group, 'data/dialogs/dialog2.txt', (2, 4))
+    dialog1_started = True
     dialog2_started = False
     screen.fill((0, 0, 0))
 
@@ -182,6 +182,10 @@ def game_process_level_1(screen):
 
                 if dialog_with_apple.check_position(player.pos, screen) and dialog_with_apple.check_start_dialog():
                     dialog_with_apple.next_string(screen)
+
+        if dialog1_started:
+            dialog_with_parrot.next_string(screen)
+            dialog1_started = False
 
         tiles_group.draw(screen)
         player_group.draw(screen)
@@ -217,12 +221,71 @@ def game_process_level_1(screen):
                 dialog_with_apple.next_string(screen)
 
         if not dialog_with_apple.check_start_dialog():
-            print('Конец уровня')
+            running = False
 
         pygame.display.flip()
         clock.tick(FPS)
 
     set_tile(map_filename, '.', apple_pos)
+
+    class Star(pygame.sprite.Sprite):
+        # сгенерируем частицы разного размера
+        def __init__(self, pos, dx, dy, n_frames=1):
+            self.fire = [load_image("world_design/points/star.png")]
+            for scale in (5, 10, 20):
+                self.fire.append(pygame.transform.scale(self.fire[0], (scale, scale)))
+            super().__init__(all_sprites)
+            self.image = random.choice(self.fire)
+            self.rect = self.image.get_rect()
+
+            # у каждой частицы своя скорость — это вектор
+            self.velocity = [dx, dy]
+            # и свои координаты
+            self.rect.x, self.rect.y = pos
+
+            # гравитация будет одинаковой (значение константы)
+            self.gravity = random.randint(-2, 2)
+
+            self.n_frames = n_frames
+
+        def update(self):
+            # применяем гравитационный эффект:
+            # движение с ускорением под действием гравитации
+            self.velocity[1] += self.gravity // self.n_frames
+            # перемещаем частицу
+            self.rect.x += self.velocity[0] // self.n_frames
+            self.rect.y += self.velocity[1] // self.n_frames
+            # убиваем, если частица ушла за экран
+            if not self.rect.colliderect(screen_rect):
+                self.kill()
+
+    def create_particles(position, n_frames=1):
+        # количество создаваемых частиц
+        particle_count = 20
+        # возможные скорости
+        for _ in range(particle_count):
+            Star(position, random.randint(-5, 5), random.randint(-5, 5), n_frames)
+
+    screen_rect = (0, 0, 1000, 900)
+    all_sprites = pygame.sprite.Group()
+    timer = 0
+    frequency = 5
+    for i in range(300):
+        timer += 1
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+        if timer % frequency == 0:
+            timer = 0
+            create_particles((random.randint(25, 975), random.randint(25, 875)))
+            create_particles((random.randint(25, 975), random.randint(25, 875)))
+            create_particles((random.randint(25, 975), random.randint(25, 875)))
+
+        screen.fill(pygame.Color("black"))
+        all_sprites.draw(screen)
+        all_sprites.update()
+        pygame.display.flip()
+        clock.tick(FPS)
 
 
 if __name__ == '__main__':
