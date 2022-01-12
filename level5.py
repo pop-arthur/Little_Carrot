@@ -1,7 +1,6 @@
 from game_init_functions import *
 import pygame
 import random
-from dialogs import Dialog
 
 
 def game_process_level_5(screen):
@@ -23,6 +22,8 @@ def game_process_level_5(screen):
     dialogs_group = pygame.sprite.Group()
     tip_grooup = pygame.sprite.Group()
     boss_group = pygame.sprite.Group()
+    player_bullets_group = pygame.sprite.Group()
+    boss_bullet_group = pygame.sprite.Group()
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
@@ -91,12 +92,23 @@ def game_process_level_5(screen):
             self.pos = [2, 0]
             self.rect = self.image.get_rect().move(
                 tile_width * self.pos[0] + 2, tile_height * self.pos[1] + 8)
+            self.group = pygame.sprite.Group()
+            self.group.add(self)
+            self.hp = 100
 
-        def update(self):
+        def damage(self):
+            nonlocal running
+            if pygame.sprite.groupcollide(player_bullets_group, boss_group, True, False):
+                self.hp -= 1
+                print(self.hp)
+                if self.hp == 0:
+                    running = False
+                    self.kill()
+
+        def move(self):
             nonlocal timer
             if not timer % self.speed == 0:
                 return
-
             timer = 0
             if self.speed > 7:
                 self.speed -= 1
@@ -109,6 +121,17 @@ def game_process_level_5(screen):
             self.pos[0] += moving
             self.rect = self.image.get_rect().move(
                 tile_width * self.pos[0] + 2, tile_height * self.pos[1] + 8)
+
+            Bullet(self.rect.centerx, self.rect.bottom, 10, boss_group)
+
+        def update(self, *args, **kwargs):
+            nonlocal timer
+
+            arg = args[0]
+            if arg == 'move':
+                self.move()
+            elif arg == 'damage':
+                self.damage()
 
     class Tip(pygame.sprite.Sprite):
         def __init__(self, text):
@@ -137,22 +160,40 @@ def game_process_level_5(screen):
             self.rect = self.image.get_rect().move(
                 tile_width * pos_x + 5, tile_height * pos_y)
             self.pos = (pos_x, pos_y)
+            self.centerx = 50
+            self.bottom = 90
+            self.speedx = 0
 
         def move(self, x, y):
             self.pos = (x, y)
             self.rect = self.image.get_rect().move(
                 tile_width * x + 5, tile_height * y)
 
-        def check_parrot(self):
-            if self.pos == (4, 2):
-                return True
-            return False
-
         def damage(self, count_of_damage):
             print('Вас ударило')
 
         def heal(self, count_of_heal):
             print('Подлечились!')
+
+        def shoot(self):
+            Bullet(self.rect.centerx, self.rect.top, -10, player_bullets_group)
+
+    class Bullet(pygame.sprite.Sprite):
+        bullet_image = load_image('world_design/characters/gold_carrot_with_gun.png', scale_size=(20, 30))
+
+        def __init__(self, x, y, speedy, group):
+            super(Bullet, self).__init__(group)
+            self.image = Bullet.bullet_image
+            self.rect = self.image.get_rect()
+            self.rect.bottom = y
+            self.rect.centerx = x
+            self.speedy = speedy
+
+        def update(self):
+            self.rect.y += self.speedy
+            # убить, если он заходит за верхнюю часть экрана
+            if self.rect.bottom < 0:
+                self.kill()
 
     def generate_level(level):
         for y in range(len(level)):
@@ -214,6 +255,8 @@ def game_process_level_5(screen):
                     move("down")
                 if event.key == pygame.K_d:
                     move("right")
+                if event.key == pygame.K_SPACE:
+                    player.shoot()
 
             if event.type == pygame.MOUSEBUTTONUP:
                 pass
@@ -223,8 +266,17 @@ def game_process_level_5(screen):
         tiles_group.update()
         draw_lines(screen)
         boss_group.draw(screen)
-        boss_group.update()
+        player_bullets_group.draw(screen)
+        player_bullets_group.update()
+        boss_bullet_group.draw(screen)
+        boss_bullet_group.update()
+        boss_group.update('move')
         pygame.draw.line(screen, (90, 0, 0), (0, 400), (1000, 400), 2)
+
+        if pygame.sprite.groupcollide(player_bullets_group, boss_group, False, False):
+            boss_group.update('damage')
+        if pygame.sprite.groupcollide(boss_bullet_group, player_group, False, False):
+            player_group.update('damage')
 
         pygame.display.flip()
         clock.tick(FPS)

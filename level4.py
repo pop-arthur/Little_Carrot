@@ -92,7 +92,8 @@ def game_process_level_4(screen):
             self.rect = self.image.get_rect().move(
                 tile_width * pos_x + 5, tile_height * pos_y + 5)
             self.hp = 3
-            self.group = pygame.sprite.Group().add(self)
+            self.group = pygame.sprite.Group()
+            self.group.add(self)
 
         def update(self):
             if pygame.sprite.groupcollide(bullets_group, self.group, True, False):
