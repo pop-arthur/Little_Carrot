@@ -22,6 +22,7 @@ def game_process_level_4(screen):
     dialogs_group = pygame.sprite.Group()
     tip_grooup = pygame.sprite.Group()
     scarecrows_group = pygame.sprite.Group()
+    bullets_group = pygame.sprite.Group()
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
@@ -118,6 +119,9 @@ def game_process_level_4(screen):
             self.rect = self.image.get_rect().move(
                 tile_width * pos_x + 5, tile_height * pos_y)
             self.pos = (pos_x, pos_y)
+            self.rect.centerx = 50
+            self.rect.bottom = 90
+            self.speedx = 0
 
         def move(self, x, y):
             self.pos = (x, y)
@@ -134,6 +138,11 @@ def game_process_level_4(screen):
 
         def heal(self, count_of_heal):
             print('Подлечились!')
+
+        def shoot(self):
+            bullet = Bullet(self.rect.centerx, self.rect.top)
+            all_sprites.add(bullet)
+            bullets_group.add(bullet)
 
     def generate_level(level):
         for y in range(len(level)):
@@ -173,6 +182,22 @@ def game_process_level_4(screen):
         if level_map[player.pos[1]][player.pos[0]] == 'dirty_row.png':
             player.damage(1)
 
+    class Bullet(pygame.sprite.Sprite):
+        bullet_image = load_image('world_design/characters/gold_carrot_with_gun.png', scale_size=(20, 30))
+        def __init__(self, x, y):
+            pygame.sprite.Sprite.__init__(self)
+            self.image = Bullet.bullet_image
+            self.rect = self.image.get_rect()
+            self.rect.bottom = y
+            self.rect.centerx = x
+            self.speedy = -10
+
+        def update(self):
+            self.rect.y += self.speedy
+            # убить, если он заходит за верхнюю часть экрана
+            if self.rect.bottom < 0:
+                self.kill()
+
     dialog_status = False
     dialog_with_dog1 = Dialog(dialogs_group, 'data/dialogs/dialog13.txt', (7, 6))
     dialog1_started = False
@@ -199,7 +224,8 @@ def game_process_level_4(screen):
                     move("down")
                 if event.key == pygame.K_d:
                     move("right")
-
+                if event.key == pygame.K_SPACE:
+                    player.shoot()
             if event.type == pygame.MOUSEBUTTONUP:
                 if dialog1_started and dialog_with_dog1.check_position(player.pos, screen):
                     if dialog_with_dog1.check_start_dialog():
@@ -225,10 +251,13 @@ def game_process_level_4(screen):
         tiles_group.draw(screen)
         player_group.draw(screen)
         scarecrows_group.draw(screen)
+        bullets_group.draw(screen)
         scarecrows_group.update()
         tiles_group.update()
         draw_lines(screen)
-
+        all_sprites.update()
+        if pygame.sprite.groupcollide(bullets_group, scarecrows_group, True, False):
+            print("wow")
         pygame.display.flip()
         clock.tick(FPS)
 
