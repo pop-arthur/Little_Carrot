@@ -5,5 +5,5 @@ Tree-1-4.png	Tree-1-4.png	Tree-1-4.png	Tree-1-4.png	.	box.png	.	box.png	.	Tree-1
 .	.	.	.	.	box.png	.	box.png	.	blue_door_right.png-2_1
 .	Stone-1.png	Stone-1.png	Stone-1.png	.	box.png	.	box.png	.	Tree-1-4.png
 .	Stone-1.png	.	dirty_row.png	.	.	.	box.png	.	.
-bell.png-2_2	Stone-1.png	heal.png	Tree-1-4.png	Tree-1-4.png	Tree-1-4.png	Tree-1-4.png	box.png	Stone-1.png	Stone-1.png
+bell.png-2_2	Stone-1.png	.	Tree-1-4.png	Tree-1-4.png	Tree-1-4.png	Tree-1-4.png	box.png	Stone-1.png	Stone-1.png
 -1 -1

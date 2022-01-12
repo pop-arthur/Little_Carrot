@@ -48,6 +48,19 @@ def load_level(filename):
     return level_map, player_pos
 
 
+def set_tile(filename, tile_type, pos):
+    filename = "data/" + filename
+    with open(filename, "r", encoding="utf-8") as map_file:
+        data = map_file.readlines()
+
+    data = list(map(str.split, data))
+    data[pos[1]][pos[0]] = tile_type
+    data = ['\t'.join(elem) for elem in data[:-1]] + [' '.join(data[-1])]
+    data = '\n'.join(data)
+    with open(filename, "w", encoding="utf-8") as map_file:
+        map_file.write(data)
+
+
 def draw_lines(screen):
     color = (48, 77, 46)
     [pygame.draw.line(screen, color, (x, 0), (x, 800), 1) for x in range(0, 1000, 100)]

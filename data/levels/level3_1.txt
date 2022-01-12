@@ -1,9 +1,9 @@
 bell.png-1_1	.	.	.	box.png	.	.	.	.	bell.png-1_2
 Big-wooden-fence-1.png	Big-wooden-fence-2.png	Big-wooden-fence-3.png	.	.	box.png	.	Big-wooden-fence-1.png	Big-wooden-fence-2.png	Big-wooden-fence-3.png
-.	heal.png	Bush-4.png	.	box.png	.	.	.	.	.
+.	.	Bush-4.png	.	box.png	.	.	.	.	.
 .	Bush-4.png	Bush-4.png	.	.	box.png	Bush-4.png	Bush-4.png	Bush-4.png	.
 .	.	.	.	box.png	.	.	.	.	.
 .	Bush-4.png	Bush-4.png	Bush-4.png	Bush-4.png	box.png	.	Bush-4.png	Bush-4.png	Bush-4.png
 .	.	.	.	.	.	.	.	.	.
 .	Tree-1-4.png	Tree-1-4.png	.	blue_door_down.png-1_1	.	Tree-1-4.png	Tree-1-4.png	Tree-1-4.png	.
--1 -1
+4 6

@@ -28,6 +28,7 @@ def game_process_level_3(screen):
     dialogs_group = pygame.sprite.Group()
     bells_group = pygame.sprite.Group()
     tip_grooup = pygame.sprite.Group()
+    heals_group = pygame.sprite.Group()
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
@@ -58,7 +59,6 @@ def game_process_level_3(screen):
                        'light_earth.png': [load_image('world_design/Ground/light_earth.png'), (0, 0)],
                        'Tree-1-4.png': [load_image('world_design/Trees/Tree-1/Tree-1-4.png'), (0, 0)],
                        'portal.png': [load_image('world_design/points/portal.png'), (0, 0)],
-                       'heal.png': [load_image('world_design/points/heal.png'), (0, 0)],
                        'Flower-3.png': [load_image('world_design/Flowers/Flower-3.png'), (0, 0)]}
 
         def __init__(self, tile_type, pos_x, pos_y):
@@ -81,14 +81,32 @@ def game_process_level_3(screen):
             if self.tile_type == 'red_point.png':
                 if player.pos == self.pos:
                     tiles_group.remove(self)
-            elif self.tile_type == 'heal.png':
-                if player.pos == self.pos:
-                    player.heal(1)
-                    tiles_group.remove(self)
             elif len(args) == 1 and args[0].startswith('remove '):
                 obj = args[0].split()[1]
                 if obj in self.tile_type:
                     tiles_group.remove(self)
+
+    class Heal(pygame.sprite.Sprite):
+        image = load_image('world_design/points/heal.png')
+
+        def __init__(self, pos):
+            super(Heal, self).__init__(heals_group)
+            self.image = Heal.image
+            self.pos = pos
+            self.rect = self.image.get_rect().move(
+                tile_width * pos[0], tile_height * pos[1])
+
+        def update(self):
+            if player.pos == self.pos:
+                player.heal(1)
+                heals_dict[current_map_filename].remove(self)
+                heals_group.remove(self)
+
+    heals_dict = {map_filename_1: [Heal((1, 2))],
+                  map_filename_2: [Heal((2, 7))],
+                  map_filename_3: [Heal((2, 0)), Heal((7, 2)), Heal((3, 7)), Heal((9, 7))],
+                  map_filename_4: [Heal((0, 7))],
+                  map_filename_5: []}
 
     class Tip(pygame.sprite.Sprite):
         def __init__(self, text):
@@ -241,7 +259,9 @@ def game_process_level_3(screen):
             tiles_group.empty()
             doors_group.empty()
             bells_group.empty()
+            heals_group.empty()
             generate_level(level_map)
+            heals_group.add(*heals_dict[current_map_filename])
             player.move(*end_pos)
 
     def get_door(door_num):
@@ -295,7 +315,7 @@ def game_process_level_3(screen):
                 else:
                     Tile(level[y][x], x, y)
 
-    possible_to_move_objects = {'.', 'red_point.png', 'blue_door_left.png-3_4', 'dirty_row.png', 'heal.png',
+    possible_to_move_objects = {'.', 'red_point.png', 'blue_door_left.png-3_4', 'dirty_row.png',
                                 'blue_door_right.png-3_2', 'blue_door_down.png-3_3', 'blue_door_up.png-3_1',
                                 'blue_door_down.png-1_1', 'blue_door_right.png-2_1', 'blue_door_left.png-4_1',
                                 'blue_door_up.png-5_1', 'portal.png'}
@@ -394,6 +414,7 @@ def game_process_level_3(screen):
 
         # положение на карте
         change_player_pos_on_map(current_map_filename, player.pos)
+        heals_group.update()
         # грядки
         if level_map[player.pos[1]][player.pos[0]] == 'dirty_row.png':
             player.damage(1)
@@ -421,6 +442,10 @@ def game_process_level_3(screen):
     generate_level(level_map)
 
     screen.fill((0, 0, 0))
+
+    heals_group.empty()
+    heals_group.add(*heals_dict[current_map_filename])
+    heals_group.add(*heals_dict[current_map_filename])
 
     running = True
     while running:  # главный игровой цикл
@@ -532,6 +557,7 @@ def game_process_level_3(screen):
         doors_group.draw(screen)
         bells_group.draw(screen)
         player_group.draw(screen)
+        heals_group.draw(screen)
         tiles_group.update()
         if not dialog_status:
             bells_group.update()
