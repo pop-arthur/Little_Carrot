@@ -157,6 +157,8 @@ def game_process_level_1(screen):
     apple_pos = (1, 4)
 
     dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog1.txt', (4, 2))
+    dialog_with_apple = Dialog(dialogs_group, 'data/dialogs/dialog2.txt', (2, 4))
+    dialog2_started = False
     screen.fill((0, 0, 0))
 
     running = True
@@ -178,6 +180,9 @@ def game_process_level_1(screen):
                 if player.check_parrot() and dialog_with_parrot.check_start_dialog():
                     dialog_with_parrot.next_string(screen)
 
+                if dialog_with_apple.check_position(player.pos, screen) and dialog_with_apple.check_start_dialog():
+                    dialog_with_apple.next_string(screen)
+
         tiles_group.draw(screen)
         player_group.draw(screen)
         tiles_group.update()
@@ -189,6 +194,7 @@ def game_process_level_1(screen):
             counter_1 += 1
         elif sprites_collide and counter_1 >= 10:
             start_apple = True
+            dialog2_started = True
 
         sprites_collide = False
 
@@ -204,6 +210,14 @@ def game_process_level_1(screen):
             Tile('apple.png', *apple_pos)
             set_tile(map_filename, 'apple.png', apple_pos)
             start_apple = False
+
+        if dialog_with_apple.check_position(player.pos, screen) and dialog2_started:
+            dialog2_started = False
+            if dialog_with_apple.check_start_dialog():
+                dialog_with_apple.next_string(screen)
+
+        if not dialog_with_apple.check_start_dialog():
+            print('Конец уровня')
 
         pygame.display.flip()
         clock.tick(FPS)
