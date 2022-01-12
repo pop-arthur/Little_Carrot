@@ -13,8 +13,6 @@ cur.execute("""CREATE TABLE IF NOT EXISTS users(
    health INT);
 """)
 
-#create players
-#health?
 cur.execute("""INSERT INTO users(player_name, level, map, health)
    VALUES('Anna', 1, 1, 0);""")
 
