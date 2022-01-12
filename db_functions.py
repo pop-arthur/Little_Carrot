@@ -71,6 +71,7 @@ def damage_hp(player_name, count_of_damage_hp):
         con.close()
 
 
-with open("data/qt/current_player.txt", 'r', encoding='utf-8') as file:
-    player_name = file.read().split()[0]
-print(player_name)
+def get_player_name():
+    with open("data/qt/current_player.txt", 'r', encoding='utf-8') as file:
+        player_name = file.read().split()[0]
+    return player_name
