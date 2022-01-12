@@ -78,6 +78,7 @@ def game_process_level_1(screen):
                        [load_image('world_design/Fences/Big wooden fence/Big-wooden-fence-3.png', scale_size=(100, 75)),
                         (0, 25)],
                    'parrot': [load_image('world_design/characters/parrot.png'), (0, 0)],
+                   'apple.png': [load_image('world_design/characters/apple.png', color_key=-1), (0, 0)],
                    'Stone-1.png': [load_image('world_design/Stones/Stone-1.png', scale_size=(74, 90)), (13, 10)]}
     player_image = load_image('world_design/characters/gold_carrot_ok.png')
 
@@ -134,7 +135,6 @@ def game_process_level_1(screen):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
-
         screen.fill((i,) * 3)
         pygame.display.flip()
         clock.tick(FPS)
@@ -154,13 +154,16 @@ def game_process_level_1(screen):
     counter_1, counter_2 = 0, 0
     sprites_collide = False
     start_apple = False
+    apple_pos = (1, 4)
 
     dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog1.txt', (4, 2))
-
     screen.fill((0, 0, 0))
-    while True:  # главный игровой цикл
+
+    running = True
+    while running:  # главный игровой цикл
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                set_tile(map_filename, '.', apple_pos)
                 terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
@@ -191,15 +194,21 @@ def game_process_level_1(screen):
 
         if pygame.sprite.spritecollide(player, rect_group, True):
             sprites_collide = True
-
         elif counter_1 > counter_2:
             pos = create_right_pos()
             rect_group.add(RedRect(pos[0], pos[1]))
             rect_group.draw(screen)
             counter_2 += 1
 
+        if start_apple:
+            Tile('apple.png', *apple_pos)
+            set_tile(map_filename, 'apple.png', apple_pos)
+            start_apple = False
+
         pygame.display.flip()
         clock.tick(FPS)
+
+    set_tile(map_filename, '.', apple_pos)
 
 
 if __name__ == '__main__':

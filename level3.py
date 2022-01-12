@@ -278,7 +278,6 @@ def game_process_level_3(screen):
         if door:
             door.go_through_the_door()
 
-
     def generate_level(level):
         for y in range(len(level)):
             for x in range(len(level[y])):
