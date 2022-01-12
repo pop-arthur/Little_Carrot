@@ -164,6 +164,10 @@ def game_process_level_4(screen):
             player.damage(1)
 
     dialog_status = False
+    dialog_with_dog1 = Dialog(dialogs_group, 'data/dialogs/dialog13.txt', (7, 6))
+    dialog1_started = False
+    dialog_with_dog2 = Dialog(dialogs_group, 'data/dialogs/dialog14.txt', (7, 6))
+    dialog2_started = False
 
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
@@ -187,7 +191,25 @@ def game_process_level_4(screen):
                     move("right")
 
             if event.type == pygame.MOUSEBUTTONUP:
-                pass
+                if dialog1_started and dialog_with_dog1.check_position(player.pos, screen):
+                    if dialog_with_dog1.check_start_dialog():
+                        dialog_with_dog1.next_string(screen)
+
+                if dialog2_started and dialog_with_dog2.check_position(player.pos, screen):
+                    if dialog_with_dog2.check_start_dialog():
+                        dialog_with_dog2.next_string(screen)
+
+        if dialog_with_dog1.check_position(player.pos, screen) and not dialog1_started:
+            dialog1_started = True
+            dialog_with_dog1.next_string(screen)
+
+        #Второй диалог после учения
+        #if dialog_with_dog2.check_position(player.pos, screen) and not dialog2_started:
+            #dialog2_started = True
+            #dialog_with_dog2.next_string(screen)
+
+        if not dialog_with_dog2.check_start_dialog():
+            print('Конец уровня')
 
         tiles_group.draw(screen)
         player_group.draw(screen)
