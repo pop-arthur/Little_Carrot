@@ -78,16 +78,17 @@ def game_process_level_1(screen):
                        [load_image('world_design/Fences/Big wooden fence/Big-wooden-fence-3.png', scale_size=(100, 75)),
                         (0, 25)],
                    'parrot': [load_image('world_design/characters/parrot.png'), (0, 0)],
+                   'apple.png': [load_image('world_design/characters/apple.png', color_key=-1), (0, 0)],
                    'Stone-1.png': [load_image('world_design/Stones/Stone-1.png', scale_size=(74, 90)), (13, 10)]}
     player_image = load_image('world_design/characters/gold_carrot_ok.png')
 
     class RedRect(pygame.sprite.Sprite):
         def __init__(self, pos_x, pos_y):
             super().__init__(all_sprites, player_group)
-            # self.image = load_image('world_design/points/red_point.png', scale_size=(90, 90))
-            self.image = pygame.Surface((90, 90))
-            self.image.fill("red")
-            pygame.transform.scale(self.image, (100, 100))
+            # self.image = pygame.Surface((90, 90))
+            # self.image.fill("red")
+            # pygame.transform.scale(self.image, (100, 100))
+            self.image = load_image('world_design/points/red_point.png', scale_size=(90, 90))
             self.rect = self.image.get_rect().move(pos_x, pos_y)
 
     def generate_level(level):
@@ -123,7 +124,6 @@ def game_process_level_1(screen):
             if x < max_x and level_map[y][x + 1] == ".":
                 player.move(x + 1, y)
 
-        change_player_pos_on_map(map_filename, player.pos)
         level_map = load_level(map_filename)
 
     level_map, player_pos = load_level(map_filename)
@@ -134,7 +134,6 @@ def game_process_level_1(screen):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
-
         screen.fill((i,) * 3)
         pygame.display.flip()
         clock.tick(FPS)
@@ -154,13 +153,19 @@ def game_process_level_1(screen):
     counter_1, counter_2 = 0, 0
     sprites_collide = False
     start_apple = False
+    apple_pos = (1, 4)
 
     dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog1.txt', (4, 2))
-
+    dialog_with_apple = Dialog(dialogs_group, 'data/dialogs/dialog2.txt', (2, 4))
+    dialog1_started = True
+    dialog2_started = False
     screen.fill((0, 0, 0))
-    while True:  # главный игровой цикл
+
+    running = True
+    while running:  # главный игровой цикл
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                set_tile(map_filename, '.', apple_pos)
                 terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
@@ -175,6 +180,13 @@ def game_process_level_1(screen):
                 if player.check_parrot() and dialog_with_parrot.check_start_dialog():
                     dialog_with_parrot.next_string(screen)
 
+                if dialog_with_apple.check_position(player.pos, screen) and dialog_with_apple.check_start_dialog():
+                    dialog_with_apple.next_string(screen)
+
+        if dialog1_started:
+            dialog_with_parrot.next_string(screen)
+            dialog1_started = False
+
         tiles_group.draw(screen)
         player_group.draw(screen)
         tiles_group.update()
@@ -186,18 +198,93 @@ def game_process_level_1(screen):
             counter_1 += 1
         elif sprites_collide and counter_1 >= 10:
             start_apple = True
+            dialog2_started = True
 
         sprites_collide = False
 
         if pygame.sprite.spritecollide(player, rect_group, True):
             sprites_collide = True
-
         elif counter_1 > counter_2:
             pos = create_right_pos()
             rect_group.add(RedRect(pos[0], pos[1]))
             rect_group.draw(screen)
             counter_2 += 1
 
+        if start_apple:
+            Tile('apple.png', *apple_pos)
+            set_tile(map_filename, 'apple.png', apple_pos)
+            # RedRect(200, 400)
+            start_apple = False
+
+        if dialog_with_apple.check_position(player.pos, screen) and dialog2_started:
+            dialog2_started = False
+            if dialog_with_apple.check_start_dialog():
+                dialog_with_apple.next_string(screen)
+
+        if not dialog_with_apple.check_start_dialog():
+            running = False
+
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    set_tile(map_filename, '.', apple_pos)
+
+    class Star(pygame.sprite.Sprite):
+        # сгенерируем частицы разного размера
+        def __init__(self, pos, dx, dy, n_frames=1):
+            self.fire = [load_image("world_design/points/star.png")]
+            for scale in (5, 10, 20):
+                self.fire.append(pygame.transform.scale(self.fire[0], (scale, scale)))
+            super().__init__(all_sprites)
+            self.image = random.choice(self.fire)
+            self.rect = self.image.get_rect()
+
+            # у каждой частицы своя скорость — это вектор
+            self.velocity = [dx, dy]
+            # и свои координаты
+            self.rect.x, self.rect.y = pos
+
+            # гравитация будет одинаковой (значение константы)
+            self.gravity = random.randint(-2, 2)
+
+            self.n_frames = n_frames
+
+        def update(self):
+            # применяем гравитационный эффект:
+            # движение с ускорением под действием гравитации
+            self.velocity[1] += self.gravity // self.n_frames
+            # перемещаем частицу
+            self.rect.x += self.velocity[0] // self.n_frames
+            self.rect.y += self.velocity[1] // self.n_frames
+            # убиваем, если частица ушла за экран
+            if not self.rect.colliderect(screen_rect):
+                self.kill()
+
+    def create_particles(position, n_frames=1):
+        # количество создаваемых частиц
+        particle_count = 20
+        # возможные скорости
+        for _ in range(particle_count):
+            Star(position, random.randint(-5, 5), random.randint(-5, 5), n_frames)
+
+    screen_rect = (0, 0, 1000, 900)
+    all_sprites = pygame.sprite.Group()
+    timer = 0
+    frequency = 5
+    for i in range(300):
+        timer += 1
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+        if timer % frequency == 0:
+            timer = 0
+            create_particles((random.randint(25, 975), random.randint(25, 875)))
+            create_particles((random.randint(25, 975), random.randint(25, 875)))
+            create_particles((random.randint(25, 975), random.randint(25, 875)))
+
+        screen.fill(pygame.Color("black"))
+        all_sprites.draw(screen)
+        all_sprites.update()
         pygame.display.flip()
         clock.tick(FPS)
 
