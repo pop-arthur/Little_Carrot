@@ -85,10 +85,10 @@ def game_process_level_1(screen):
     class RedRect(pygame.sprite.Sprite):
         def __init__(self, pos_x, pos_y):
             super().__init__(all_sprites, player_group)
-            # self.image = load_image('world_design/points/red_point.png', scale_size=(90, 90))
-            self.image = pygame.Surface((90, 90))
-            self.image.fill("red")
-            pygame.transform.scale(self.image, (100, 100))
+            # self.image = pygame.Surface((90, 90))
+            # self.image.fill("red")
+            # pygame.transform.scale(self.image, (100, 100))
+            self.image = load_image('world_design/points/red_point.png', scale_size=(90, 90))
             self.rect = self.image.get_rect().move(pos_x, pos_y)
 
     def generate_level(level):
@@ -213,6 +213,7 @@ def game_process_level_1(screen):
         if start_apple:
             Tile('apple.png', *apple_pos)
             set_tile(map_filename, 'apple.png', apple_pos)
+            # RedRect(200, 400)
             start_apple = False
 
         if dialog_with_apple.check_position(player.pos, screen) and dialog2_started:
