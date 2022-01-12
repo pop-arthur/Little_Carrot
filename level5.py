@@ -122,16 +122,11 @@ def game_process_level_5(screen):
             self.rect = self.image.get_rect().move(
                 tile_width * self.pos[0] + 2, tile_height * self.pos[1] + 8)
 
-            Bullet(self.rect.centerx, self.rect.bottom, 10, boss_group)
-
-        def update(self, *args, **kwargs):
-            nonlocal timer
-
-            arg = args[0]
-            if arg == 'move':
-                self.move()
-            elif arg == 'damage':
-                self.damage()
+            digit = random.randint(0, 210)
+            if digit % 5 == 0:
+                Bullet(self.rect.centerx - 50, self.rect.bottom, 5, boss_bullet_group)
+            elif digit % 5 == 1:
+                Bullet(self.rect.centerx + 50, self.rect.bottom, 5, boss_bullet_group)
 
     class Tip(pygame.sprite.Sprite):
         def __init__(self, text):
@@ -192,7 +187,7 @@ def game_process_level_5(screen):
         def update(self):
             self.rect.y += self.speedy
             # убить, если он заходит за верхнюю часть экрана
-            if self.rect.bottom < 0:
+            if self.rect.bottom < 0 or self.rect.bottom > 800:
                 self.kill()
 
     def generate_level(level):
@@ -239,7 +234,7 @@ def game_process_level_5(screen):
 
     screen.fill((0, 0, 0))
 
-    Boss()
+    boss = Boss()
 
     running = True
     while running:  # главный игровой цикл
@@ -257,7 +252,6 @@ def game_process_level_5(screen):
                     move("right")
                 if event.key == pygame.K_SPACE:
                     player.shoot()
-
             if event.type == pygame.MOUSEBUTTONUP:
                 pass
 
@@ -270,13 +264,13 @@ def game_process_level_5(screen):
         player_bullets_group.update()
         boss_bullet_group.draw(screen)
         boss_bullet_group.update()
-        boss_group.update('move')
+        boss.move()
         pygame.draw.line(screen, (90, 0, 0), (0, 400), (1000, 400), 2)
 
         if pygame.sprite.groupcollide(player_bullets_group, boss_group, False, False):
-            boss_group.update('damage')
-        if pygame.sprite.groupcollide(boss_bullet_group, player_group, False, False):
-            player_group.update('damage')
+            boss.damage()
+        if pygame.sprite.groupcollide(boss_bullet_group, player_group, True, False):
+            player.damage(1)
 
         pygame.display.flip()
         clock.tick(FPS)
