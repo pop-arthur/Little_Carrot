@@ -153,6 +153,7 @@ def game_process_level_1(screen):
     counter_1, counter_2 = 0, 0
     sprites_collide = False
     start_apple = False
+    start_apple_dialog = False
     apple_pos = (1, 4)
 
     dialog_with_parrot = Dialog(dialogs_group, 'data/dialogs/dialog1.txt', (4, 2))
@@ -181,7 +182,7 @@ def game_process_level_1(screen):
                     dialog_with_parrot.next_string(screen)
 
                 if dialog_with_apple.check_position(player.pos, screen) and dialog_with_apple.check_start_dialog() and\
-                        not dialog_with_parrot.check_start_dialog():
+                        not dialog_with_parrot.check_start_dialog() and start_apple_dialog:
                     dialog_with_apple.next_string(screen)
 
         if dialog1_started:
@@ -212,6 +213,7 @@ def game_process_level_1(screen):
             counter_2 += 1
 
         if start_apple:
+            start_apple_dialog = True
             Tile('apple.png', *apple_pos)
             set_tile(map_filename, 'apple.png', apple_pos)
             # RedRect(200, 400)
