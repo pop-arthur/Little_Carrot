@@ -91,6 +91,15 @@ def game_process_level_4(screen):
             self.image = Scarecrow.image
             self.rect = self.image.get_rect().move(
                 tile_width * pos_x + 5, tile_height * pos_y + 5)
+            self.hp = 3
+            self.group = pygame.sprite.Group().add(self)
+
+        def update(self):
+            if pygame.sprite.groupcollide(bullets_group, self.group, True, False):
+                self.hp -= 1
+                print(self.pos)
+                if self.hp == 0:
+                    self.kill()
 
     class Tip(pygame.sprite.Sprite):
         def __init__(self, text):
@@ -250,12 +259,11 @@ def game_process_level_4(screen):
         player_group.draw(screen)
         scarecrows_group.draw(screen)
         bullets_group.draw(screen)
-        scarecrows_group.update()
         tiles_group.update()
         draw_lines(screen)
         all_sprites.update()
-        if pygame.sprite.groupcollide(bullets_group, scarecrows_group, True, False):
-            print("wow")
+        if pygame.sprite.groupcollide(bullets_group, scarecrows_group, False, False):
+            scarecrows_group.update()
         pygame.display.flip()
         clock.tick(FPS)
 
