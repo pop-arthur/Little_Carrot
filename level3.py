@@ -252,7 +252,6 @@ def game_process_level_3(screen):
         def go_through_the_door(self):
             nonlocal current_map_filename, level_map, player_pos, player
             end_map, end_pos = Door.doors_dict[self.door_num]
-            change_player_pos_on_map(current_map_filename, (-1, -1))
             current_map_filename = end_map
             change_player_pos_on_map(current_map_filename, end_pos)
             level_map, player_pos = load_level(current_map_filename)
@@ -411,8 +410,6 @@ def game_process_level_3(screen):
             if x < max_x - 1 and level_map[y][x + 1] in possible_to_move_objects:
                 player.move(x + 1, y)
 
-        # положение на карте
-        change_player_pos_on_map(current_map_filename, player.pos)
         heals_group.update()
         # грядки
         if level_map[player.pos[1]][player.pos[0]] == 'dirty_row.png':

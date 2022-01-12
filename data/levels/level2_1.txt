@@ -6,4 +6,4 @@ dirty_row.png	dirty_row.png	dirty_row.png	dirty_row.png	.	.	.	.	.	.
 .	dirty_row.png	.	.	dirty_row.png	dirty_row.png	dirty_row.png	.	.	.
 .	dirty_row.png	dirty_row.png	dirty_row.png	.	.	.	.	dirty_row.png	dirty_row.png
 .	.	.	.	.	dirty_row.png	dirty_row.png	.	.	.
--1 -1
+4 2

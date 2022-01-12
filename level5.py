@@ -186,8 +186,6 @@ def game_process_level_5(screen):
             if x < max_x - 1 and level_map[y][x + 1] in possible_to_move_objects:
                 player.move(x + 1, y)
 
-        # положение на карте
-        change_player_pos_on_map(current_map_filename, player.pos)
         # грядки
         if level_map[player.pos[1]][player.pos[0]] == 'dirty_row.png':
             player.damage(1)
