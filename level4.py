@@ -119,8 +119,8 @@ def game_process_level_4(screen):
             self.rect = self.image.get_rect().move(
                 tile_width * pos_x + 5, tile_height * pos_y)
             self.pos = (pos_x, pos_y)
-            self.rect.centerx = 50
-            self.rect.bottom = 90
+            self.centerx = 50
+            self.bottom = 90
             self.speedx = 0
 
         def move(self, x, y):
@@ -177,13 +177,13 @@ def game_process_level_4(screen):
         if movement == "right":
             if x < max_x - 1 and level_map[y][x + 1] in possible_to_move_objects:
                 player.move(x + 1, y)
-
         # грядки
         if level_map[player.pos[1]][player.pos[0]] == 'dirty_row.png':
             player.damage(1)
 
     class Bullet(pygame.sprite.Sprite):
         bullet_image = load_image('world_design/characters/gold_carrot_with_gun.png', scale_size=(20, 30))
+
         def __init__(self, x, y):
             pygame.sprite.Sprite.__init__(self)
             self.image = Bullet.bullet_image
@@ -239,14 +239,12 @@ def game_process_level_4(screen):
             dialog1_started = True
             dialog_with_dog1.next_string(screen)
 
-        #Второй диалог после учения
-        #if dialog_with_dog2.check_position(player.pos, screen) and not dialog2_started:
-            #dialog2_started = True
-            #dialog_with_dog2.next_string(screen)
+        if dialog_with_dog2.check_position(player.pos, screen) and not dialog2_started and len(scarecrows_group) == 0:
+            dialog2_started = True
+            dialog_with_dog2.next_string(screen)
 
         if not dialog_with_dog2.check_start_dialog():
             print('Конец уровня')
-
 
         tiles_group.draw(screen)
         player_group.draw(screen)
