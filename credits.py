@@ -95,3 +95,27 @@ def show_end_credits(screen):
 
         pygame.display.flip()
         clock.tick(fps)
+
+
+def death_screen(screen):
+    clock = pygame.time.Clock()
+    fps = 60
+    running = True
+    screen.fill((0, 0, 0))
+    output_text = self.credits_font.render('ВЫ УМЕРЛИ :(', True, (255, 255, 255))
+    place = output_text.get_rect(center=(500, 420))
+    screen.fill((0, 0, 0))
+    screen.blit(output_text, place)
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                running = False
+
+            if event.type == pygame.KEKEYDOWN:
+                running = False
+
+        pygame.display.flip()
+        clock.tick(fps)
