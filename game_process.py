@@ -59,9 +59,8 @@ def init_game():
         level = get_level()
 
     if level == 6:
+        save_level(0)
         show_end_credits(screen)
-
-    save_level(0)
 
     terminate()
 

@@ -301,6 +301,9 @@ def game_process_level_2(screen):
                 if event.key == pygame.K_d:
                     move(player, "right")
 
+                if event.key == pygame.K_h and event.mod & pygame.KMOD_LCTRL:
+                    player.heal(8)
+
             if event.type == pygame.MOUSEBUTTONUP:
                 if player.pos == (4, 2) and first_dialog_started and\
                         current_map_filename == map_filename_1:

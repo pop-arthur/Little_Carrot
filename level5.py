@@ -266,7 +266,7 @@ def game_process_level_5(screen):
                     move("right")
                 if event.key == pygame.K_SPACE:
                     player.shoot()
-                if event.key == pygame.K_h:
+                if event.key == pygame.K_h and event.mod & pygame.KMOD_LCTRL:
                     player.heal(1000)
             if event.type == pygame.MOUSEBUTTONUP:
                 pass
