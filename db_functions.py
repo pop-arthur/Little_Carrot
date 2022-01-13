@@ -100,6 +100,23 @@ def get_level():
         cur.close()
         con.close()
 
+def reset_player():
+    con = sqlite3.connect('little_carrot.db')
+    cur = con.cursor()
+    player_name = get_player_name()
+
+    try:
+        cur.execute(f"UPDATE users SET health = 1 "
+                    f"WHERE player_name = '{player_name}'")
+
+        cur.execute(f"UPDATE users SET level = 1 "
+                    f"WHERE player_name = '{player_name}'")
+    finally:
+        con.commit()
+        cur.close()
+        con.close()
+
+
 def get_player_name():
     with open("data/qt/current_player.txt", 'r', encoding='utf-8') as file:
         player_name = file.read().split()[0]
