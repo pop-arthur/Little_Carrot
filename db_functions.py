@@ -74,6 +74,20 @@ def damage_hp(count_of_damage_hp):
         con.close()
 
 
+def save_level(level):
+    con = sqlite3.connect('little_carrot.db')
+    cur = con.cursor()
+    player_name = get_player_name()
+
+    try:
+        cur.execute( f"UPDATE users SET level = {level}"
+                     f"WHERE player_name = '{player_name}'")
+    finally:
+        con.commit()
+        cur.close()
+        con.close()
+
+
 def get_player_name():
     with open("data/qt/current_player.txt", 'r', encoding='utf-8') as file:
         player_name = file.read().split()[0]

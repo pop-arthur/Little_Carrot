@@ -237,6 +237,7 @@ def game_process_level_4(screen):
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
     generate_level(level_map)
+    save_level(4)
 
     screen.fill((0, 0, 0))
 

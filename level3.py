@@ -1,4 +1,5 @@
 from game_init_functions import *
+from db_functions import *
 import pygame
 import random
 from dialogs import Dialog
@@ -439,6 +440,7 @@ def game_process_level_3(screen):
     generate_level(level_map)
 
     screen.fill((0, 0, 0))
+    save_level(3)
 
     heals_group.empty()
     heals_group.add(*heals_dict[current_map_filename])
