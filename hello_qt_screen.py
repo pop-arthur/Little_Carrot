@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QApplication, QWidget
 import sys
 from game_process import init_game
 from db_functions import add_player, player_exists
+from db_functions import reset_player
 
 
 class HelloScreen(QWidget):
@@ -33,6 +34,7 @@ class HelloScreen(QWidget):
     def new_game(self):
         # запусить для игрока игру с начала
         self.close()
+        reset_player()
         init_game()
 
     def account_settings(self):
