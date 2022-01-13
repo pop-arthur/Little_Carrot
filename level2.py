@@ -106,12 +106,10 @@ def game_process_level_2(screen):
             self.image = Player.player_ok_image
 
         def damage(self, count_of_damage):
-            damage_hp(count_of_damage)
-            self.hp = get_current_hp()
+            self.hp -= count_of_damage
 
         def heal(self, count_of_heal):
-            add_hp(count_of_heal)
-            self.hp = get_current_hp()
+            self.hp += count_of_heal
 
     class Door(pygame.sprite.Sprite):
         doors_dict = {'1_1': [map_filename_2, (0, 4)],
@@ -386,6 +384,8 @@ def game_process_level_2(screen):
 
         pygame.display.flip()
         clock.tick(FPS)
+
+    set_hp(player.hp)
 
 
 if __name__ == '__main__':
