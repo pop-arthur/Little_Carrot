@@ -3,7 +3,7 @@ from  game_init_functions import *
 
 
 def get_credits_text(file_name):
-    with open(file_name, 'r', encoding='utf-8') as credits_file:
+    with open(file_name, 'r') as credits_file:
         credits_text = list(map(lambda x: x.strip(), credits_file.readlines()))
         credits_text.append('')
     return credits_text
@@ -46,7 +46,7 @@ def show_start_credits(screen):
     opening_credits_group = pygame.sprite.Group()
     final_credits_group = pygame.sprite.Group()
 
-    opening_credits = Credits(opening_credits_group, 'data/credits_texts/opening_credits.txt', 120)
+    opening_credits = Credits(opening_credits_group, 'data/credits_texts/opening_credits.txt', 140)
     opening_credits.set_flag(True)
 
     fps = 60
