@@ -65,7 +65,7 @@ def draw_lines(screen):
     color = (48, 77, 46)
     [pygame.draw.line(screen, color, (x, 0), (x, 800), 1) for x in range(0, 1000, 100)]
     [pygame.draw.line(screen, color, (0, y), (1000, y), 1) for y in range(0, 800, 100)]
-
+    pygame.draw.line(screen, color, (0, 850), (1000, 850), 1)
 
 def terminate():
     pygame.quit()
