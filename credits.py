@@ -102,7 +102,8 @@ def death_screen(screen):
     fps = 60
     running = True
     screen.fill((0, 0, 0))
-    output_text = self.credits_font.render('ВЫ УМЕРЛИ :(', True, (255, 255, 255))
+    credits_font = pygame.font.Font(None, 56)
+    output_text = credits_font.render('ВЫ УМЕРЛИ :(', True, (255, 255, 255))
     place = output_text.get_rect(center=(500, 420))
     screen.fill((0, 0, 0))
     screen.blit(output_text, place)
@@ -114,7 +115,7 @@ def death_screen(screen):
             if event.type == pygame.MOUSEBUTTONUP:
                 running = False
 
-            if event.type == pygame.KEKEYDOWN:
+            if event.type == pygame.KEYDOWN:
                 running = False
 
         pygame.display.flip()

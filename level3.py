@@ -3,6 +3,7 @@ from db_functions import *
 import pygame
 import random
 from dialogs import Dialog
+from credits import death_screen
 
 
 def game_process_level_3(screen):
@@ -33,6 +34,8 @@ def game_process_level_3(screen):
     bells_group = pygame.sprite.Group()
     tip_grooup = pygame.sprite.Group()
     heals_group = pygame.sprite.Group()
+
+    success = True
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
@@ -222,12 +225,14 @@ def game_process_level_3(screen):
             self.image = Player.player_with_gun_image
 
         def damage(self, count_of_damage):
-            damage_hp(count_of_damage)
-            self.hp = get_current_hp()
+            self.hp -= count_of_damage
+            if self.hp <= 0:
+                nonlocal success
+                death_screen(screen)
+                success = False
 
         def heal(self, count_of_heal):
-            add_hp(count_of_heal)
-            self.hp = get_current_hp()
+            self.hp += count_of_heal
 
     class Door(pygame.sprite.Sprite):
         doors_dict = {'1_1': [map_filename_3, (4, 1)],
@@ -518,6 +523,9 @@ def game_process_level_3(screen):
                     if not dialog_with_apple2.check_start_dialog():
                         dialog_status = False
 
+        if not success:
+            return False
+
         if player.pos == (4, 3) and not dialog1_started and current_map_filename == map_filename_3:
             dialog_with_parrot.next_string(screen)
             dialog1_started = True
@@ -568,6 +576,9 @@ def game_process_level_3(screen):
 
         pygame.display.flip()
         clock.tick(FPS)
+
+    set_hp(player.hp)
+    return True
 
 
 if __name__ == '__main__':

@@ -14,6 +14,7 @@ class PlayerDead(Exception):
 
 
 def init_game():
+    save_level(3)
     level = get_level()
 
     pygame.init()
@@ -31,7 +32,6 @@ def init_game():
         level = get_level()
 
     if level == 2:
-
         success = game_process_level_2(screen)
         while not success:
             success = game_process_level_2(screen)
@@ -40,17 +40,26 @@ def init_game():
         level = get_level()
 
     if level == 3:
-        game_process_level_3(screen)
+        success = game_process_level_3(screen)
+        while not success:
+            success = game_process_level_3(screen)
+
         save_level(4)
         level = get_level()
 
     if level == 4:
-        game_process_level_4(screen)
+        success = game_process_level_4(screen)
+        while not success:
+            success = game_process_level_4(success)
+
         save_level(5)
         level = get_level()
 
     if level == 5:
-        game_process_level_5(screen)
+        success = game_process_level_5(screen)
+        while not success:
+            success = game_process_level_5(screen)
+
         save_level(6)
         level = get_level()
 

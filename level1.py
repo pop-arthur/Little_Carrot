@@ -295,6 +295,8 @@ def game_process_level_1(screen):
         pygame.display.flip()
         clock.tick(FPS)
 
+    return True
+
 
 if __name__ == '__main__':
     pygame.init()

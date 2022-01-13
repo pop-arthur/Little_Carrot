@@ -3,6 +3,7 @@ from db_functions import *
 import pygame
 import random
 from dialogs import Dialog
+from credits import death_screen
 
 
 def game_process_level_2(screen):
@@ -29,6 +30,8 @@ def game_process_level_2(screen):
     egg_group = pygame.sprite.Group()
     horizontal_borders = pygame.sprite.Group()
     vertical_borders = pygame.sprite.Group()
+
+    success = True
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
@@ -107,6 +110,10 @@ def game_process_level_2(screen):
 
         def damage(self, count_of_damage):
             self.hp -= count_of_damage
+            if self.hp <= 0:
+                nonlocal success
+                death_screen(screen)
+                success = False
 
         def heal(self, count_of_heal):
             self.hp += count_of_heal
@@ -306,6 +313,9 @@ def game_process_level_2(screen):
                     if dialog_with_potato2.check_start_dialog():
                         dialog_with_potato2.next_string(screen)
 
+        if not success:
+            return False
+
         # старт диалога 1
         if not first_dialog_started and player.pos == (4, 2) and current_map_filename == map_filename_1:
             if dialog_with_parrot.check_start_dialog():
@@ -386,6 +396,7 @@ def game_process_level_2(screen):
         clock.tick(FPS)
 
     set_hp(player.hp)
+    return True
 
 
 if __name__ == '__main__':

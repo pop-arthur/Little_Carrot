@@ -154,13 +154,8 @@ def game_process_level_4(screen):
                 return True
             return False
 
-        def damage(self, count_of_damage):
-            damage_hp(count_of_damage)
-            self.hp = get_current_hp()
-
         def heal(self, count_of_heal):
-            add_hp(count_of_heal)
-            self.hp = get_current_hp()
+            self.hp += count_of_heal
 
         def shoot(self):
             bullet = Bullet(self.rect.centerx, self.rect.top)
@@ -204,9 +199,6 @@ def game_process_level_4(screen):
         if movement == "right":
             if x < max_x - 1 and level_map[y][x + 1] in possible_to_move_objects:
                 player.move(x + 1, y)
-        # грядки
-        if level_map[player.pos[1]][player.pos[0]] == 'dirty_row.png':
-            player.damage(1)
 
     class Bullet(pygame.sprite.Sprite):
         bullet_image = load_image('world_design/characters/gold_carrot_with_gun.png', scale_size=(20, 30))
@@ -301,6 +293,9 @@ def game_process_level_4(screen):
             scarecrows_group.update()
         pygame.display.flip()
         clock.tick(FPS)
+
+    set_hp(player.hp)
+    return True
 
 
 if __name__ == '__main__':

@@ -2,6 +2,7 @@ from game_init_functions import *
 from db_functions import *
 import pygame
 import random
+from credits import death_screen
 
 
 def game_process_level_5(screen):
@@ -25,6 +26,8 @@ def game_process_level_5(screen):
     boss_group = pygame.sprite.Group()
     player_bullets_group = pygame.sprite.Group()
     boss_bullet_group = pygame.sprite.Group()
+
+    success = True
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
@@ -167,12 +170,14 @@ def game_process_level_5(screen):
                 tile_width * x + 5, tile_height * y)
 
         def damage(self, count_of_damage):
-            damage_hp(count_of_damage)
-            self.hp = get_current_hp()
+            self.hp -= count_of_damage
+            if self.hp <= 0:
+                nonlocal success
+                death_screen(screen)
+                success = False
 
         def heal(self, count_of_heal):
-            add_hp(count_of_heal)
-            self.hp = get_current_hp()
+            self.hp += count_of_heal
 
         def shoot(self):
             Bullet(self.rect.centerx, self.rect.top, -10, player_bullets_group)
@@ -260,6 +265,9 @@ def game_process_level_5(screen):
             if event.type == pygame.MOUSEBUTTONUP:
                 pass
 
+        if not success:
+            return False
+
         tiles_group.draw(screen)
         player_group.draw(screen)
         tiles_group.update()
@@ -280,6 +288,9 @@ def game_process_level_5(screen):
         pygame.display.flip()
         clock.tick(FPS)
         timer += 1
+
+    set_hp(player.hp)
+    return True
 
 
 if __name__ == '__main__':
