@@ -9,10 +9,6 @@ from level5 import game_process_level_5
 from db_functions import get_level, save_level
 
 
-class PlayerDead(Exception):
-    pass
-
-
 def init_game():
     save_level(3)
     level = get_level()
