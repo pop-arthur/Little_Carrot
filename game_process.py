@@ -10,7 +10,6 @@ from db_functions import get_level, save_level
 
 
 def init_game():
-    save_level(3)
     level = get_level()
 
     pygame.init()

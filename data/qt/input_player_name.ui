@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>623</width>
-    <height>205</height>
+    <width>703</width>
+    <height>182</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <rect>
      <x>20</x>
      <y>30</y>
-     <width>281</width>
+     <width>291</width>
      <height>51</height>
     </rect>
    </property>
@@ -34,7 +34,7 @@
   <widget class="QLineEdit" name="player_name_lineedit">
    <property name="geometry">
     <rect>
-     <x>260</x>
+     <x>330</x>
      <y>30</y>
      <width>341</width>
      <height>51</height>
@@ -49,8 +49,8 @@
   <widget class="QPushButton" name="ok_button">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>150</y>
+     <x>305</x>
+     <y>130</y>
      <width>91</width>
      <height>31</height>
     </rect>
