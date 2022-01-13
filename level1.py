@@ -218,10 +218,11 @@ def game_process_level_1(screen):
             start_apple_dialog = True
             Tile('apple.png', *apple_pos)
             set_tile(map_filename, 'apple.png', apple_pos)
-            #RedRect(200, 400)
+            end_point = RedRect(200, 400)
             start_apple = False
 
         if dialog_with_apple.check_position(player.pos, screen) and dialog2_started:
+            end_point.kill()
             dialog2_started = False
             if dialog_with_apple.check_start_dialog():
                 dialog_with_apple.next_string(screen)
