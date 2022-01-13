@@ -85,9 +85,6 @@ def game_process_level_1(screen):
     class RedRect(pygame.sprite.Sprite):
         def __init__(self, pos_x, pos_y):
             super().__init__(all_sprites, player_group)
-            # self.image = pygame.Surface((90, 90))
-            # self.image.fill("red")
-            # pygame.transform.scale(self.image, (100, 100))
             self.image = load_image('world_design/points/red_point.png', scale_size=(90, 90))
             self.rect = self.image.get_rect().move(pos_x, pos_y)
 
@@ -140,7 +137,7 @@ def game_process_level_1(screen):
 
     def create_right_pos():
         pos_x, pos_y = random.choice(list_of_x), random.choice(list_of_y)
-        while (pos_x in [206, 306, 406, 506, 606, 706] and pos_y == 106) or (pos_x == 306 and pos_y == 806) or \
+        while (pos_x in [206, 306, 406, 506, 606, 706] and pos_y == 106) or (pos_x == 306 and pos_y == 606) or \
                 (pos_x == 506 and pos_y == 206) or (pos_x == 606 and pos_y == 506):
             pos_x, pos_y = random.choice(list_of_x), random.choice(list_of_y)
         return pos_x, pos_y
