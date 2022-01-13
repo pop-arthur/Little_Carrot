@@ -20,7 +20,7 @@ class Dialog(pygame.sprite.Sprite):
     def next_string(self, screen):
         self.clear(screen)
         self.output_text = self.font.render(self.text[self.cell_text], True, (255, 255, 255))
-        self.place = self.output_text.get_rect(center=(500, 850))
+        self.place = self.output_text.get_rect(center=(500, 900))
         screen.blit(self.output_text, self.place)
         self.cell_text += 1
         self.output_text.fill((0, 0, 0))

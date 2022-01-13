@@ -121,12 +121,12 @@ def game_process_level_3(screen):
             self.text = text
             self.font = pygame.font.Font(None, 35)
             self.output_text = self.font.render(self.text, True, (255, 255, 255))
-            self.place = self.output_text.get_rect(center=(500, 850))
+            self.place = self.output_text.get_rect(center=(500, 900))
 
         def print_tip(self):
             self.clear()
             self.output_text = self.font.render(self.text, True, (255, 255, 255))
-            self.place = self.output_text.get_rect(center=(500, 850))
+            self.place = self.output_text.get_rect(center=(500, 900))
             screen.blit(self.output_text, self.place)
 
         def clear(self):
