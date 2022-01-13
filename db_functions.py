@@ -80,7 +80,7 @@ def save_level(level):
     player_name = get_player_name()
 
     try:
-        cur.execute( f"UPDATE users SET level = {level}"
+        cur.execute( f"UPDATE users SET level = {level} "
                      f"WHERE player_name = '{player_name}'")
     finally:
         con.commit()
