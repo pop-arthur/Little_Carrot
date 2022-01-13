@@ -52,6 +52,9 @@ def show_start_credits(screen):
     fps = 60
     running = True
     screen.fill((0, 0, 0))
+    pygame.mixer.music.load('data/music/start_sound.mp3')
+    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(0.1)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -82,6 +85,9 @@ def show_end_credits(screen):
     fps = 60
     running = True
     screen.fill((0, 0, 0))
+    pygame.mixer.music.load('data/music/end_sound.mp3')
+    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(0.1)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
