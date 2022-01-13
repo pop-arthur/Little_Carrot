@@ -87,6 +87,7 @@ def game_process_level_2(screen):
             self.rect = self.image.get_rect().move(
                 tile_width * pos_x + 5, tile_height * pos_y)
             self.pos = (pos_x, pos_y)
+            self.hp = get_current_hp()
 
         def move(self, x, y):
             self.pos = (x, y)
@@ -105,10 +106,12 @@ def game_process_level_2(screen):
             self.image = Player.player_ok_image
 
         def damage(self, count_of_damage):
-            print('Вас ударило')
+            damage_hp(count_of_damage)
+            self.hp = get_current_hp()
 
         def heal(self, count_of_heal):
-            print('Подлечились!')
+            add_hp(count_of_heal)
+            self.hp = get_current_hp()
 
     class Door(pygame.sprite.Sprite):
         doors_dict = {'1_1': [map_filename_2, (0, 4)],
