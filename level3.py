@@ -388,6 +388,7 @@ def game_process_level_3(screen):
             Tile('portal.png', 4, 3)
             story_status = 'go to portal'
         elif story_status == 'go to portal' and player.pos == (4, 3) and current_map_filename == map_filename_3:
+            change_player_pos_on_map(current_map_filename, (4, 3))
             running = False
         else:
             return False

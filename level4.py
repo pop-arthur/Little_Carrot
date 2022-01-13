@@ -24,6 +24,8 @@ def game_process_level_4(screen):
     scarecrows_group = pygame.sprite.Group()
     bullets_group = pygame.sprite.Group()
 
+    portal = pygame.sprite.Sprite()
+
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
                        'Bush-4.png': [load_image('world_design/Bushes/Bush-4.png', scale_size=(74, 74)), (13, 35)],
@@ -56,6 +58,7 @@ def game_process_level_4(screen):
                        'portal.png': [load_image('world_design/points/portal.png'), (0, 0)],
                        'heal.png': [load_image('world_design/points/heal.png'), (0, 0)],
                        'Flower-3.png': [load_image('world_design/Flowers/Flower-3.png'), (0, 0)]}
+        clear_image = load_image('world_design/characters/clear.png')
 
         def __init__(self, tile_type, pos_x, pos_y):
             super().__init__(all_sprites, tiles_group)
@@ -82,6 +85,13 @@ def game_process_level_4(screen):
                     player.heal(1)
                     tiles_group.remove(self)
 
+        def hide(self):
+            self.image = Tile.clear_image
+
+        def show(self):
+            image, indent = Tile.tile_images[self.tile_type]
+            self.image = image
+
     class Scarecrow(pygame.sprite.Sprite):
         image = load_image('world_design/characters/scarecrow.png', scale_size=(90, 90))
 
@@ -98,7 +108,6 @@ def game_process_level_4(screen):
         def update(self):
             if pygame.sprite.groupcollide(bullets_group, self.group, True, False):
                 self.hp -= 1
-                print(self.pos)
                 if self.hp == 0:
                     self.kill()
 
@@ -155,6 +164,7 @@ def game_process_level_4(screen):
             bullets_group.add(bullet)
 
     def generate_level(level):
+        nonlocal portal
         for y in range(len(level)):
             for x in range(len(level[y])):
                 Tile('empty', x, y)
@@ -162,6 +172,9 @@ def game_process_level_4(screen):
                     pass
                 elif level[y][x] == 'scarecrow.png':
                     Scarecrow(x, y)
+                elif level[y][x] == 'portal.png':
+                    portal = Tile(level[y][x], x, y)
+                    portal.hide()
                 else:
                     Tile(level[y][x], x, y)
 
@@ -208,11 +221,15 @@ def game_process_level_4(screen):
             if self.rect.bottom < 0:
                 self.kill()
 
-    dialog_status = False
+    # dialog_status = False
     dialog_with_dog1 = Dialog(dialogs_group, 'data/dialogs/dialog13.txt', (7, 6))
     dialog1_started = False
     dialog_with_dog2 = Dialog(dialogs_group, 'data/dialogs/dialog14.txt', (7, 6))
     dialog2_started = False
+
+    portal_is_active = False
+    check_portal = False
+    point_exists = False
 
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
@@ -249,12 +266,24 @@ def game_process_level_4(screen):
             dialog1_started = True
             dialog_with_dog1.next_string(screen)
 
+        if len(scarecrows_group) == 0 and not point_exists:
+            Tile('red_point.png', 7, 6)
+            point_exists = True
+
         if dialog_with_dog2.check_position(player.pos, screen) and not dialog2_started and len(scarecrows_group) == 0:
             dialog2_started = True
             dialog_with_dog2.next_string(screen)
 
         if not dialog_with_dog2.check_start_dialog():
-            print('Конец уровня')
+            portal_is_active = True
+
+        if portal_is_active:
+            portal.show()
+            check_portal = True
+            portal_is_active = False
+
+        if check_portal and player.pos == (1, 6):
+            running = False
 
         tiles_group.draw(screen)
         player_group.draw(screen)
