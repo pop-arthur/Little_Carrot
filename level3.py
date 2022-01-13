@@ -18,6 +18,9 @@ def game_process_level_3(screen):
 
     current_map_filename = map_filename_3
 
+    change_player_pos_on_map(current_map_filename, (4, 3))
+    set_tile(map_filename_3, '.', (4, 3))
+
     max_x = 10
     max_y = 8
 
@@ -33,7 +36,7 @@ def game_process_level_3(screen):
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
-                       'Bush-4.png': [load_image('world_design/Bushes/Bush-4.png', scale_size=(74, 74)), (13, 35)],
+                       'Bush-4.png': [load_image('world_design/Bushes/Bush-4.png', scale_size=(74, 74)), (13, 26)],
                        'Big-wooden-fence-1.png':
                            [load_image('world_design/Fences/Big wooden fence/Big-wooden-fence-1.png',
                                        scale_size=(100, 75)),
@@ -383,10 +386,10 @@ def game_process_level_3(screen):
                 bell.show()
                 player.gun_image()
                 # портал в центре третьей карты
+                set_tile(map_filename_3, 'portal.png', (4, 3))
                 story_status = 'create portal'
             return 'apple1'
         elif story_status == 'create portal' and current_map_filename == map_filename_3:
-            Tile('portal.png', 4, 3)
             story_status = 'go to portal'
         elif story_status == 'go to portal' and player.pos == (4, 3) and current_map_filename == map_filename_3:
             change_player_pos_on_map(current_map_filename, (4, 3))
@@ -440,7 +443,7 @@ def game_process_level_3(screen):
     generate_level(level_map)
 
     screen.fill((0, 0, 0))
-    save_level(3)
+    # save_level(3)
 
     heals_group.empty()
     heals_group.add(*heals_dict[current_map_filename])

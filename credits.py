@@ -90,5 +90,8 @@ def show_end_credits(screen):
         if final_credits.check():  # Вывод конечных титр
             final_credits_group.update(screen)
 
+        if not final_credits.check():
+            running = False
+
         pygame.display.flip()
         clock.tick(fps)

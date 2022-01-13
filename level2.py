@@ -198,7 +198,7 @@ def game_process_level_2(screen):
             super().__init__(all_sprites, egg_group)
             self.image = Egg.egg_image
             self.rect = self.image.get_rect().move(600, 500)
-            speeds = [ -6, -5, -4, -3, -2, 2, 3, 4, 5, 6]
+            speeds = [-4, -3, -2, 2, 3, 4]
             self.vx = random.choice(speeds)
             self.vy = random.choice(speeds)
             self.counter = count_of_hits
@@ -264,7 +264,7 @@ def game_process_level_2(screen):
     Border(999, 1, 999, 799)
 
     screen.fill((0, 0, 0))
-    save_level(2)
+    # save_level(2)
 
     first_dialog_started = False
     swap_control = True

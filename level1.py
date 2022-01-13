@@ -139,7 +139,7 @@ def game_process_level_1(screen):
     def create_right_pos():
         pos_x, pos_y = random.choice(list_of_x), random.choice(list_of_y)
         while (pos_x in [206, 306, 406, 506, 606, 706] and pos_y == 106) or (pos_x == 306 and pos_y == 606) or \
-                (pos_x == 506 and pos_y == 206) or (pos_x == 606 and pos_y == 506) or (pos_x == 106 and pos_y == 406):
+                (pos_x == 506 and pos_y == 206) or (pos_x == 606 and pos_y == 506):
             pos_x, pos_y = random.choice(list_of_x), random.choice(list_of_y)
         return pos_x, pos_y
 
@@ -157,7 +157,7 @@ def game_process_level_1(screen):
     dialog2_started = False
     start_points = False
     screen.fill((0, 0, 0))
-#    save_level(1)
+    # save_level(1)
 
     running = True
     while running:  # главный игровой цикл
