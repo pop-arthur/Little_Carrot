@@ -161,6 +161,9 @@ def game_process_level_1(screen):
     # save_level(1)
 
     running = True
+    pygame.mixer.music.load('data/music/main_sound.mp3')
+    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(0.1)
     while running:  # главный игровой цикл
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -175,6 +178,7 @@ def game_process_level_1(screen):
                     move(player, "down")
                 if event.key == pygame.K_d:
                     move(player, "right")
+
             if event.type == pygame.MOUSEBUTTONUP:
                 if player.check_parrot() and dialog_with_parrot.check_start_dialog():
                     dialog_with_parrot.next_string(screen)
