@@ -22,7 +22,7 @@ def player_exists(player_name):
 def add_player(player_name):
     con = sqlite3.connect('little_carrot.db')
     cur = con.cursor()
-    level, map, health = 1, 1, 0
+    level, map, health = 1, 1, 5
 
     try:
         cur.execute(f"INSERT OR IGNORE INTO users(player_name, level, map, health) "
