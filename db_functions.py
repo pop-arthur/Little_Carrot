@@ -33,9 +33,10 @@ def add_player(player_name):
         con.close()
 
 
-def get_current_hp(player_name):
+def get_current_hp():
     con = sqlite3.connect('little_carrot.db')
     cur = con.cursor()
+    player_name = get_player_name()
 
     try:
         cur.execute(f"SELECT health FROM users WHERE player_name = '{player_name}'")
@@ -45,12 +46,13 @@ def get_current_hp(player_name):
         con.close()
 
 
-def add_hp(player_name, count_of_add_hp):
+def add_hp(count_of_add_hp):
     con = sqlite3.connect('little_carrot.db')
     cur = con.cursor()
+    player_name = get_player_name()
 
     try:
-        cur.execute( f"UPDATE users SET health = {count_of_add_hp + get_current_hp(player_name)} "
+        cur.execute( f"UPDATE users SET health = {count_of_add_hp + get_current_hp()} "
                      f"WHERE player_name = '{player_name}'")
     finally:
         con.commit()
@@ -58,12 +60,27 @@ def add_hp(player_name, count_of_add_hp):
         con.close()
 
 
-def damage_hp(player_name, count_of_damage_hp):
+def damage_hp(count_of_damage_hp):
     con = sqlite3.connect('little_carrot.db')
     cur = con.cursor()
+    player_name = get_player_name()
 
     try:
-        cur.execute( f"UPDATE users SET health = {get_current_hp(player_name) - count_of_damage_hp} "
+        cur.execute( f"UPDATE users SET health = {get_current_hp() - count_of_damage_hp} "
+                     f"WHERE player_name = '{player_name}'")
+    finally:
+        con.commit()
+        cur.close()
+        con.close()
+
+
+def save_level(level):
+    con = sqlite3.connect('little_carrot.db')
+    cur = con.cursor()
+    player_name = get_player_name()
+
+    try:
+        cur.execute( f"UPDATE users SET level = {level}"
                      f"WHERE player_name = '{player_name}'")
     finally:
         con.commit()

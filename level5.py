@@ -1,4 +1,5 @@
 from game_init_functions import *
+from db_functions import *
 import pygame
 import random
 
@@ -232,6 +233,7 @@ def game_process_level_5(screen):
     player = Player(*player_pos)
     generate_level(level_map)
 
+    save_level(5)
     screen.fill((0, 0, 0))
 
     boss = Boss()

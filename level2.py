@@ -1,4 +1,5 @@
 from game_init_functions import *
+from db_functions import *
 import pygame
 import random
 from dialogs import Dialog
@@ -263,6 +264,7 @@ def game_process_level_2(screen):
     Border(999, 1, 999, 799)
 
     screen.fill((0, 0, 0))
+    save_level(2)
 
     first_dialog_started = False
     swap_control = True
