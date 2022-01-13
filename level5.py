@@ -159,6 +159,7 @@ def game_process_level_5(screen):
             self.centerx = 50
             self.bottom = 90
             self.speedx = 0
+            self.hp = get_current_hp()
 
         def move(self, x, y):
             self.pos = (x, y)
@@ -166,10 +167,12 @@ def game_process_level_5(screen):
                 tile_width * x + 5, tile_height * y)
 
         def damage(self, count_of_damage):
-            print('Вас ударило')
+            damage_hp(count_of_damage)
+            self.hp = get_current_hp()
 
         def heal(self, count_of_heal):
-            print('Подлечились!')
+            add_hp(count_of_heal)
+            self.hp = get_current_hp()
 
         def shoot(self):
             Bullet(self.rect.centerx, self.rect.top, -10, player_bullets_group)
