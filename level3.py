@@ -33,7 +33,7 @@ def game_process_level_3(screen):
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
-                       'Bush-4.png': [load_image('world_design/Bushes/Bush-4.png', scale_size=(74, 74)), (13, 35)],
+                       'Bush-4.png': [load_image('world_design/Bushes/Bush-4.png', scale_size=(74, 74)), (13, 26)],
                        'Big-wooden-fence-1.png':
                            [load_image('world_design/Fences/Big wooden fence/Big-wooden-fence-1.png',
                                        scale_size=(100, 75)),
@@ -440,7 +440,7 @@ def game_process_level_3(screen):
     generate_level(level_map)
 
     screen.fill((0, 0, 0))
-    save_level(3)
+    # save_level(3)
 
     heals_group.empty()
     heals_group.add(*heals_dict[current_map_filename])

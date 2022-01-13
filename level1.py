@@ -159,7 +159,7 @@ def game_process_level_1(screen):
     dialog1_started = True
     dialog2_started = False
     screen.fill((0, 0, 0))
-    save_level(1)
+    # save_level(1)
 
     running = True
     while running:  # главный игровой цикл

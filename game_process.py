@@ -1,5 +1,6 @@
 import pygame
 from credits import show_start_credits, show_end_credits
+from game_init_functions import terminate
 from level1 import game_process_level_1
 from level2 import game_process_level_2
 from level3 import game_process_level_3
@@ -21,6 +22,8 @@ def init_game():
     game_process_level_5(screen)
 
     show_end_credits(screen)
+
+    terminate()
 
 
 if __name__ == '__main__':
