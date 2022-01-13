@@ -36,6 +36,7 @@ def game_process_level_1(screen):
             self.rect = self.image.get_rect().move(
                 tile_width * pos_x + 5, tile_height * pos_y)
             self.pos = (pos_x, pos_y)
+            self.hp = get_current_hp()
 
         def move(self, x, y):
             self.pos = (x, y)
