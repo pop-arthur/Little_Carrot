@@ -10,6 +10,7 @@ from level5 import game_process_level_5
 def init_game():
     pygame.init()
     screen = pygame.display.set_mode((1000, 900))
+    pygame.display.set_caption("Little Carrot")
 
     show_start_credits(screen)
 

@@ -31,7 +31,6 @@ class Credits(pygame.sprite.Sprite):
         self.counter = 0
         self.cell_text += 1
 
-
     def check(self):  # Если вывелся весь файл, то флаг меняется на False
         if self.cell_text + 1 > len(self.credit_text):
             self.flag = False
