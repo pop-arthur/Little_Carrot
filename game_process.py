@@ -6,22 +6,58 @@ from level2 import game_process_level_2
 from level3 import game_process_level_3
 from level4 import game_process_level_4
 from level5 import game_process_level_5
+from db_functions import get_level, save_level
+
+
+class PlayerDead(Exception):
+    pass
 
 
 def init_game():
+    level = get_level()
+
     pygame.init()
     screen = pygame.display.set_mode((1000, 900))
     pygame.display.set_caption("Little Carrot")
 
-    show_start_credits(screen)
+    if level == 0:
+        show_start_credits(screen)
+        save_level(1)
+        level = get_level()
 
-    game_process_level_1(screen)
-    game_process_level_2(screen)
-    game_process_level_3(screen)
-    game_process_level_4(screen)
-    game_process_level_5(screen)
+    if level == 1:
+        game_process_level_1(screen)
+        save_level(2)
+        level = get_level()
 
-    show_end_credits(screen)
+    if level == 2:
+
+        success = game_process_level_2(screen)
+        while not success:
+            success = game_process_level_2(screen)
+
+        save_level(3)
+        level = get_level()
+
+    if level == 3:
+        game_process_level_3(screen)
+        save_level(4)
+        level = get_level()
+
+    if level == 4:
+        game_process_level_4(screen)
+        save_level(5)
+        level = get_level()
+
+    if level == 5:
+        game_process_level_5(screen)
+        save_level(6)
+        level = get_level()
+
+    if level == 6:
+        show_end_credits(screen)
+
+    save_level(0)
 
     terminate()
 
