@@ -283,6 +283,10 @@ def game_process_level_2(screen):
     third_door_is_active = False
     portal_is_active = False
 
+    pygame.mixer.music.load('data/music/main_sound.mp3')
+    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(0.1)
+
     while True:  # главный игровой цикл
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

@@ -247,6 +247,7 @@ def game_process_level_5(screen):
     boss = Boss()
 
     running = True
+
     while running:  # главный игровой цикл
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

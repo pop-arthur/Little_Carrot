@@ -458,6 +458,9 @@ def game_process_level_3(screen):
     heals_group.add(*heals_dict[current_map_filename])
 
     running = True
+    pygame.mixer.music.load('data/music/main_sound.mp3')
+    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(0.1)
     while running:  # главный игровой цикл
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
