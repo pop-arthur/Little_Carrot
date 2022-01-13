@@ -267,7 +267,7 @@ def game_process_level_2(screen):
     Border(999, 1, 999, 799)
 
     screen.fill((0, 0, 0))
-    # save_level(2)
+    save_level(2)
 
     first_dialog_started = False
     swap_control = True
