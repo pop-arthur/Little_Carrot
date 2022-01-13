@@ -88,6 +88,18 @@ def save_level(level):
         con.close()
 
 
+def get_level():
+    con = sqlite3.connect('little_carrot.db')
+    cur = con.cursor()
+    player_name = get_player_name()
+
+    try:
+        cur.execute(f"SELECT level FROM users WHERE player_name = '{player_name}'")
+        return cur.fetchone()[0]
+    finally:
+        cur.close()
+        con.close()
+
 def get_player_name():
     with open("data/qt/current_player.txt", 'r', encoding='utf-8') as file:
         player_name = file.read().split()[0]
