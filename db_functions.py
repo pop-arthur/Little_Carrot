@@ -22,7 +22,7 @@ def player_exists(player_name):
 def add_player(player_name):
     con = sqlite3.connect('little_carrot.db')
     cur = con.cursor()
-    level, map, health = 1, 1, 5
+    level, map, health = 0, 1, 5
 
     try:
         cur.execute(f"INSERT OR IGNORE INTO users(player_name, level, map, health) "
@@ -106,10 +106,10 @@ def reset_player():
     player_name = get_player_name()
 
     try:
-        cur.execute(f"UPDATE users SET health = 1 "
+        cur.execute(f"UPDATE users SET health = 5 "
                     f"WHERE player_name = '{player_name}'")
 
-        cur.execute(f"UPDATE users SET level = 1 "
+        cur.execute(f"UPDATE users SET level = 0 "
                     f"WHERE player_name = '{player_name}'")
     finally:
         con.commit()
