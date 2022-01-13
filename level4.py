@@ -1,4 +1,5 @@
 from game_init_functions import *
+from db_functions import *
 import pygame
 import random
 from dialogs import Dialog
@@ -153,9 +154,11 @@ def game_process_level_4(screen):
             return False
 
         def damage(self, count_of_damage):
+            damage_hp(count_of_damage)
             print('Вас ударило')
 
         def heal(self, count_of_heal):
+            add_hp(count_of_heal)
             print('Подлечились!')
 
         def shoot(self):
