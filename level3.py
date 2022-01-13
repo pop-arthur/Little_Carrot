@@ -467,51 +467,49 @@ def game_process_level_3(screen):
                         current_map_filename == map_filename_3:
                     if dialog_with_parrot.check_start_dialog():
                         dialog_with_parrot.next_string(screen)
-                    else:
+                    if not dialog_with_parrot.check_start_dialog():
                         dialog_status = False
 
                 if dialog2_started and dialog_with_beet1.check_position(player.pos, screen) and\
-                        current_map_filename == map_filename_4:
+                        current_map_filename == map_filename_4 and not dialog6_started:
                     if dialog_with_beet1.check_start_dialog():
                         dialog_with_beet1.next_string(screen)
-                    else:
-                        dialog2_started = False
+                    if not dialog_with_beet1.check_start_dialog():
                         dialog_status = False
 
                 if dialog3_started and dialog_with_melon.check_position(player.pos, screen) and\
                         current_map_filename == map_filename_1:
                     if dialog_with_melon.check_start_dialog():
                         dialog_with_melon.next_string(screen)
-                    else:
+                    if not dialog_with_melon.check_start_dialog():
                         dialog_status = False
 
                 if dialog4_started and dialog_with_pumpkin1.check_position(player.pos, screen) and\
                         current_map_filename == map_filename_2:
                     if dialog_with_pumpkin1.check_start_dialog():
                         dialog_with_pumpkin1.next_string(screen)
-                    else:
+                    if not dialog_with_pumpkin1.check_start_dialog():
                         dialog_status = False
 
                 if dialog5_started and dialog_with_pumpkin2.check_position(player.pos, screen) and\
                         current_map_filename == map_filename_2:
                     if dialog_with_pumpkin2.check_start_dialog():
                         dialog_with_pumpkin2.next_string(screen)
-                    else:
+                    if not dialog_with_pumpkin2.check_start_dialog():
                         dialog_status = False
 
                 if dialog6_started and dialog_with_beet2.check_position(player.pos, screen) and\
                         current_map_filename == map_filename_4:
                     if dialog_with_beet2.check_start_dialog():
                         dialog_with_beet2.next_string(screen)
-                        dialog_status = True
-                    else:
+                    if not dialog_with_beet2.check_start_dialog():
                         dialog_status = False
 
                 if dialog7_started and dialog_with_apple2.check_position(player.pos, screen) and\
                         current_map_filename == map_filename_1:
                     if dialog_with_apple2.check_start_dialog():
                         dialog_with_apple2.next_string(screen)
-                    else:
+                    if not dialog_with_apple2.check_start_dialog():
                         dialog_status = False
 
         if player.pos == (4, 3) and not dialog1_started and current_map_filename == map_filename_3:
