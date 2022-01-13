@@ -18,6 +18,9 @@ def game_process_level_3(screen):
 
     current_map_filename = map_filename_3
 
+    change_player_pos_on_map(current_map_filename, (4, 3))
+    set_tile(map_filename_3, '.', (4, 3))
+
     max_x = 10
     max_y = 8
 
@@ -383,10 +386,10 @@ def game_process_level_3(screen):
                 bell.show()
                 player.gun_image()
                 # портал в центре третьей карты
+                set_tile(map_filename_3, 'portal.png', (4, 3))
                 story_status = 'create portal'
             return 'apple1'
         elif story_status == 'create portal' and current_map_filename == map_filename_3:
-            Tile('portal.png', 4, 3)
             story_status = 'go to portal'
         elif story_status == 'go to portal' and player.pos == (4, 3) and current_map_filename == map_filename_3:
             change_player_pos_on_map(current_map_filename, (4, 3))
