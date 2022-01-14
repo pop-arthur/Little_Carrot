@@ -105,7 +105,6 @@ def game_process_level_5(screen):
             nonlocal running
             if pygame.sprite.groupcollide(player_bullets_group, boss_group, True, False):
                 self.hp -= 1
-                print(self.hp)
                 if self.hp == 0:
                     running = False
                     self.kill()
