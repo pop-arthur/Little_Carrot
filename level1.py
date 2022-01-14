@@ -142,7 +142,7 @@ def game_process_level_1(screen):
     def create_right_pos():
         pos_x, pos_y = random.choice(list_of_x), random.choice(list_of_y)
         while (pos_x in [206, 306, 406, 506, 606, 706] and pos_y == 106) or (pos_x == 306 and pos_y == 606) or \
-                (pos_x == 506 and pos_y == 206) or (pos_x == 606 and pos_y == 506):
+                (pos_x == 506 and pos_y == 206) or (pos_x == 606 and pos_y == 506) or (pos_x == 206 and pos_y == 406):
             pos_x, pos_y = random.choice(list_of_x), random.choice(list_of_y)
         return pos_x, pos_y
 
@@ -166,7 +166,7 @@ def game_process_level_1(screen):
     running = True
     pygame.mixer.music.load('data/music/main_sound.mp3')
     pygame.mixer.music.play(-1)
-    pygame.mixer.music.set_volume(0.09)
+    pygame.mixer.music.set_volume(0.04)
 
     while running:  # главный игровой цикл
         for event in pygame.event.get():
