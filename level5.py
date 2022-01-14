@@ -3,6 +3,7 @@ from db_functions import *
 import pygame
 import random
 from credits import death_screen
+from health_output import Health_Output
 
 
 def game_process_level_5(screen):
@@ -245,6 +246,8 @@ def game_process_level_5(screen):
     screen.fill((0, 0, 0))
 
     boss = Boss()
+    pleyer_health_string = Health_Output(screen, (500, 825), player.hp, string='YOU', size=30)
+    boss_health_string = Health_Output(screen, (500, 900), boss.hp, string='BOSS')
 
     running = True
     pygame.mixer.music.load('data/music/boss_sound.mp3')
@@ -291,6 +294,9 @@ def game_process_level_5(screen):
         if pygame.sprite.groupcollide(boss_bullet_group, player_group, True, False):
             player.damage(1)
 
+        pleyer_health_string.update_hp(screen, player.hp)
+        boss_health_string.update_hp(screen, boss.hp)
+
         pygame.display.flip()
         clock.tick(FPS)
         timer += 1
@@ -306,7 +312,7 @@ def game_process_level_5(screen):
 
 if __name__ == '__main__':
     pygame.init()
-    size = width, height = (1000, 900)
+    size = width, height = (1000, 950)
     pygame.display.set_caption("Little Carrot")
     screen = pygame.display.set_mode(size)
     game_process_level_5(screen)

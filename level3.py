@@ -4,6 +4,7 @@ import pygame
 import random
 from dialogs import Dialog
 from credits import death_screen
+from health_output import Health_Output
 
 
 def game_process_level_3(screen):
@@ -457,6 +458,8 @@ def game_process_level_3(screen):
     heals_group.add(*heals_dict[current_map_filename])
     heals_group.add(*heals_dict[current_map_filename])
 
+    health_string = Health_Output(screen, (500, 825), player.hp)
+
     running = True
     pygame.mixer.music.load('data/music/main_sound.mp3')
     pygame.mixer.music.play(-1)
@@ -576,6 +579,7 @@ def game_process_level_3(screen):
         if not dialog_status:
             bells_group.update()
         draw_lines(screen)
+        health_string.update_hp(screen, player.hp)
 
         pygame.display.flip()
         clock.tick(FPS)

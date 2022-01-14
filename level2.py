@@ -1,9 +1,12 @@
+import time
+
 from game_init_functions import *
 from db_functions import *
 import pygame
 import random
 from dialogs import Dialog
 from credits import death_screen
+from health_output import Health_Output
 
 
 def game_process_level_2(screen):
@@ -282,6 +285,9 @@ def game_process_level_2(screen):
     second_dialog2_started = False
     third_door_is_active = False
     portal_is_active = False
+    end_transformation = False
+
+    health_string = Health_Output(screen, (500, 825), player.hp)
 
     pygame.mixer.music.load('data/music/main_sound.mp3')
     pygame.mixer.music.play(-1)
@@ -360,6 +366,10 @@ def game_process_level_2(screen):
             break
 
         # диалог 2
+        if not dialog_with_potato1.check_start_dialog() and end_transformation and not second_dialog2_started:
+            dialog_with_potato2.next_string(screen)
+            second_dialog2_started = True
+
         if level_map[player.pos[1]][player.pos[0]] == 'red_point.png' and \
             current_map_filename == map_filename_3:
             if dialog_with_potato1.check_start_dialog() and not second_dialog1_started:
@@ -375,10 +385,9 @@ def game_process_level_2(screen):
                     pygame.display.flip()
                 screen.fill((0, 0, 0))
                 player.be_ok()
+                end_transformation = True
 
-            if not dialog_with_potato1.check_start_dialog() and not second_dialog2_started:
-                dialog_with_potato2.next_string(screen)
-                second_dialog2_started = True
+
 
             if not dialog_with_potato2.check_start_dialog() and swap_control:
                 swap_control = False
@@ -399,6 +408,8 @@ def game_process_level_2(screen):
             egg_group.draw(screen)
             egg_group.update()
 
+        health_string.update_hp(screen, player.hp)
+
         pygame.display.flip()
         clock.tick(FPS)
 
@@ -408,7 +419,7 @@ def game_process_level_2(screen):
 
 if __name__ == '__main__':
     pygame.init()
-    size = width, height = (1000, 900)
+    size = width, height = (1000, 950)
     pygame.display.set_caption("Little Carrot")
     screen = pygame.display.set_mode(size)
     game_process_level_2(screen)

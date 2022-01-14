@@ -2,6 +2,7 @@ import random
 from game_init_functions import *
 from db_functions import *
 from dialogs import Dialog
+from health_output import Health_Output
 
 
 def game_process_level_1(screen):
@@ -129,6 +130,7 @@ def game_process_level_1(screen):
     player = Player(*player_pos)
     generate_level(level_map)
 
+
     for i in range(256):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -160,10 +162,12 @@ def game_process_level_1(screen):
     screen.fill((0, 0, 0))
     # save_level(1)
 
+    health_string = Health_Output(screen, (500, 825), player.hp)
     running = True
     pygame.mixer.music.load('data/music/main_sound.mp3')
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(0.09)
+
     while running:  # главный игровой цикл
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -235,6 +239,8 @@ def game_process_level_1(screen):
         if not dialog_with_apple.check_start_dialog():
             running = False
 
+        health_string.update_hp(screen, player.hp)
+
         pygame.display.flip()
         clock.tick(FPS)
 
@@ -304,7 +310,7 @@ def game_process_level_1(screen):
 
 if __name__ == '__main__':
     pygame.init()
-    size = width, height = (1000, 900)
+    size = width, height = (1000, 950)
     pygame.display.set_caption("Little Carrot")
     screen = pygame.display.set_mode(size)
     game_process_level_1(screen)

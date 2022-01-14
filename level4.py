@@ -3,7 +3,7 @@ from db_functions import *
 import pygame
 import random
 from dialogs import Dialog
-
+from health_output import Health_Output
 
 def game_process_level_4(screen):
     FPS = 60
@@ -233,6 +233,7 @@ def game_process_level_4(screen):
     save_level(4)
 
     screen.fill((0, 0, 0))
+    health_string = Health_Output(screen, (500, 825), player.hp)
 
     running = True
     pygame.mixer.music.load('data/music/main_sound.mp3')
@@ -294,6 +295,7 @@ def game_process_level_4(screen):
         all_sprites.update()
         if pygame.sprite.groupcollide(bullets_group, scarecrows_group, False, False):
             scarecrows_group.update()
+        health_string.update_hp(screen, player.hp)
         pygame.display.flip()
         clock.tick(FPS)
 
