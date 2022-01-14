@@ -114,6 +114,7 @@ def get_level():
         cur.close()
         con.close()
 
+
 def reset_player():
     con = sqlite3.connect('little_carrot.db')
     cur = con.cursor()
