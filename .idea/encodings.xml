@@ -3,7 +3,9 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/data/credits_texts/final_credits.txt" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/data/credits_texts/opening_credits.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/data/dialogs/dialog13.txt" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/data/dialogs/dialog14.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/data/dialogs/dialog15.txt" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/data/dialogs/dialog3.txt" charset="windows-1251" />
   </component>
 </project>
