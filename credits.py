@@ -1,5 +1,6 @@
 import pygame
-from  game_init_functions import *
+from game_init_functions import *
+from dialogs import Dialog
 
 
 def get_credits_text(file_name):
@@ -88,6 +89,43 @@ def show_end_credits(screen):
     pygame.mixer.music.load('data/music/end_sound.mp3')
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(0.1)
+
+    picture_group = pygame.sprite.Group()
+    dialogs_group = pygame.sprite.Group()
+
+    class Picture(pygame.sprite.Sprite):
+        image = load_image('credits_texts/final_image.png', scale_size=(1000, 850))
+
+        def __init__(self):
+            super(Picture, self).__init__(picture_group)
+            self.image = Picture.image
+            self.rect = self.image.get_rect().move(0, 0)
+
+    picture = Picture()
+    final_dialog = Dialog(dialogs_group, 'data/dialogs/dialog15.txt', (4, 4))
+    dialog1_started = True
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                if final_dialog.check_start_dialog():
+                    final_dialog.next_string(screen)
+
+        if dialog1_started:
+            final_dialog.next_string(screen)
+            dialog1_started = False
+
+        if not final_dialog.check_start_dialog():
+            running = False
+
+        picture_group.draw(screen)
+        pygame.display.flip()
+        clock.tick(fps)
+
+    running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
