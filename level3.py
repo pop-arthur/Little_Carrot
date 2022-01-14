@@ -56,7 +56,7 @@ def game_process_level_3(screen):
                        'red_point.png': [load_image('world_design/points/red_point.png'), (0, 0)],
                        'dirty_row.png': [load_image('world_design/Ground/dirty_row.png'), (0, 0)],
                        'parrot': [load_image('world_design/characters/parrot.png'), (0, 0)],
-                       'apple.png': [load_image('world_design/characters/apple.png', color_key=-1), (0, 0)],
+                       'apple.png': [load_image('world_design/characters/apple.png'), (0, 0)],
                        'beet.png': [load_image('world_design/characters/beet.png'), (0, 0)],
                        'pumpkin.png': [load_image('world_design/characters/pumpkin.png'), (0, 0)],
                        'watermelon.png': [load_image('world_design/characters/watermelon.png'), (0, 0)],

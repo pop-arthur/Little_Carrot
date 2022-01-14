@@ -13,7 +13,7 @@ def init_game():
     level = get_level()
 
     pygame.init()
-    screen = pygame.display.set_mode((1000, 900))
+    screen = pygame.display.set_mode((1000, 950))
     pygame.display.set_caption("Little Carrot")
 
     if level == 0:
