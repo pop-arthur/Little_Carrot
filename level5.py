@@ -273,6 +273,7 @@ def game_process_level_5(screen):
                 if event.key == pygame.K_d:
                     move("right")
                 if event.key == pygame.K_SPACE:
+                    shoot_sound.play()
                     player.shoot()
                 if event.key == pygame.K_h and event.mod & pygame.KMOD_LCTRL:
                     player.heal(1000)
