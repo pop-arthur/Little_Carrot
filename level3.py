@@ -226,6 +226,7 @@ def game_process_level_3(screen):
             self.image = Player.player_with_gun_image
 
         def damage(self, count_of_damage):
+            damage_sound.play()
             self.hp -= count_of_damage
             if self.hp <= 0:
                 nonlocal success
@@ -459,6 +460,9 @@ def game_process_level_3(screen):
     heals_group.add(*heals_dict[current_map_filename])
 
     health_string = Health_Output(screen, (500, 825), player.hp)
+
+    damage_sound = pygame.mixer.Sound('data/music/damage_sound_full.mp3')
+    damage_sound.set_volume(0.5)
 
     running = True
     pygame.mixer.music.load('data/music/main_sound.mp3')

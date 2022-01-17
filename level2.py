@@ -112,6 +112,7 @@ def game_process_level_2(screen):
             self.image = Player.player_ok_image
 
         def damage(self, count_of_damage):
+            damage_sound.play()
             self.hp -= count_of_damage
             if self.hp <= 0:
                 nonlocal success
@@ -288,6 +289,9 @@ def game_process_level_2(screen):
     end_transformation = False
 
     health_string = Health_Output(screen, (500, 825), player.hp)
+
+    damage_sound = pygame.mixer.Sound('data/music/damage_sound_full.mp3')
+    damage_sound.set_volume(0.5)
 
     pygame.mixer.music.load('data/music/main_sound.mp3')
     pygame.mixer.music.play(-1)

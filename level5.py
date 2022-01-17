@@ -170,6 +170,7 @@ def game_process_level_5(screen):
                 tile_width * x + 5, tile_height * y)
 
         def damage(self, count_of_damage):
+            damage_sound.play()
             self.hp -= count_of_damage
             if self.hp <= 0:
                 nonlocal success
@@ -240,6 +241,11 @@ def game_process_level_5(screen):
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
     generate_level(level_map)
+
+    shoot_sound = pygame.mixer.Sound('data/music/piu_shoot_sound.mp3')
+    shoot_sound.set_volume(0.5)
+    damage_sound = pygame.mixer.Sound('data/music/damage_sound_cut.mp3')
+    damage_sound.set_volume(0.5)
 
     save_level(5)
     screen.fill((0, 0, 0))

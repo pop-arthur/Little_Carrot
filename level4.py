@@ -227,6 +227,11 @@ def game_process_level_4(screen):
     check_portal = False
     point_exists = False
 
+    shoot_sound = pygame.mixer.Sound('data/music/piu_shoot_sound.mp3')
+    shoot_sound.set_volume(0.5)
+    damage_sound = pygame.mixer.Sound('data/music/damage_sound_full.mp3')
+    damage_sound.set_volume(0.5)
+
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
     generate_level(level_map)
@@ -253,6 +258,7 @@ def game_process_level_4(screen):
                 if event.key == pygame.K_d:
                     move("right")
                 if event.key == pygame.K_SPACE:
+                    shoot_sound.play()
                     player.shoot()
             if event.type == pygame.MOUSEBUTTONUP:
                 if dialog1_started and dialog_with_dog1.check_position(player.pos, screen):

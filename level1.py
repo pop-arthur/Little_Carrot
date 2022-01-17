@@ -162,6 +162,9 @@ def game_process_level_1(screen):
     screen.fill((0, 0, 0))
     # save_level(1)
 
+    damage_sound = pygame.mixer.Sound('data/music/damage_sound_full.mp3')
+    damage_sound.set_volume(0.5)
+
     health_string = Health_Output(screen, (500, 825), player.hp)
     running = True
     pygame.mixer.music.load('data/music/main_sound.mp3')
