@@ -6,7 +6,7 @@ from level2 import game_process_level_2
 from level3 import game_process_level_3
 from level4 import game_process_level_4
 from level5 import game_process_level_5
-from db_functions import get_level, save_level
+from db_functions import get_level, save_level, reset_player
 
 
 def init_game():
@@ -62,6 +62,7 @@ def init_game():
         save_level(0)
         show_end_credits(screen)
 
+    reset_player()
     terminate()
 
 
