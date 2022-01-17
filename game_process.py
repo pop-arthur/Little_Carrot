@@ -14,6 +14,9 @@ def init_game():
 
     pygame.init()
     screen = pygame.display.set_mode((1000, 950))
+    programIcon = pygame.image.load('data/world_design/characters/gold_carrot.png')
+    pygame.display.set_icon(programIcon)
+
     pygame.display.set_caption("Little Carrot")
 
     if level == 0:
