@@ -13,6 +13,8 @@ def game_process_level_2(screen):
     FPS = 60
     tile_width, tile_height = 100, 100
     clock = pygame.time.Clock()
+    programIcon = pygame.image.load('data/world_design/characters/gold_carrot.png')
+    pygame.display.set_icon(programIcon)
 
     map_filename_1 = 'levels/level2_1.txt'
     map_filename_2 = 'levels/level2_2.txt'
