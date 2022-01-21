@@ -10,7 +10,7 @@ def game_process_level_1(screen):
     tile_width, tile_height = 100, 100
     clock = pygame.time.Clock()
     pygame.display.set_caption("Little Carrot")
-    programIcon = pygame.image.load('data/world_design/characters/gold_carrot.png')
+    programIcon = pygame.image.load('data/world_design/characters/gold_carrot_ok.png')
     pygame.display.set_icon(programIcon)
 
     max_x = 9

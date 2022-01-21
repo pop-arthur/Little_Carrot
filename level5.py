@@ -11,7 +11,7 @@ def game_process_level_5(screen):
     tile_width, tile_height = 100, 100
     clock = pygame.time.Clock()
     timer = 0
-    programIcon = pygame.image.load('data/world_design/characters/gold_carrot.png')
+    programIcon = pygame.image.load('data/world_design/characters/gold_carrot_ok.png')
     pygame.display.set_icon(programIcon)
 
     map_filename_1 = 'levels/level5.txt'
