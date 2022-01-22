@@ -178,9 +178,11 @@ def game_process_level_5(screen):
                 nonlocal success
                 death_screen(screen)
                 success = False
+            set_hp(self.hp)
 
         def heal(self, count_of_heal):
             self.hp += count_of_heal
+            set_hp(self.hp)
 
         def shoot(self):
             Bullet(self.rect.centerx, self.rect.top, -10, player_bullets_group)

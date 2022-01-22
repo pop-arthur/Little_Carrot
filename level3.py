@@ -234,9 +234,11 @@ def game_process_level_3(screen):
                 nonlocal success
                 death_screen(screen)
                 success = False
+            set_hp(self.hp)
 
         def heal(self, count_of_heal):
             self.hp += count_of_heal
+            set_hp(self.hp)
 
     class Door(pygame.sprite.Sprite):
         doors_dict = {'1_1': [map_filename_3, (4, 1)],
