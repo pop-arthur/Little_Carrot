@@ -190,12 +190,15 @@ def game_process_level_1(screen):
                     move(player, "right")
 
             if event.type == pygame.MOUSEBUTTONUP:
-                if player.check_parrot() and dialog_with_parrot.check_start_dialog():
+                if dialog_with_parrot.check_position(player.pos, screen) and dialog_with_parrot.check_start_dialog():
                     dialog_with_parrot.next_string(screen)
 
-                if dialog_with_apple.check_position(player.pos, screen) and dialog_with_apple.check_start_dialog() and\
+                elif dialog_with_apple.check_position(player.pos, screen) and dialog_with_apple.check_start_dialog() and\
                         not dialog_with_parrot.check_start_dialog() and start_apple_dialog:
                     dialog_with_apple.next_string(screen)
+                else:
+                    dialog_with_parrot.clear(screen)
+                    dialog_with_apple.clear(screen)
 
         if dialog1_started:
             dialog_with_parrot.next_string(screen)

@@ -154,6 +154,7 @@ def game_process_level_2(screen):
             generate_level(level_map)
             player.move(*end_pos)
 
+
     def get_door(door_num):
         result = [elem for elem in doors_group.sprites() if elem.door_num == door_num]
         return result[0] if result else None
@@ -216,10 +217,13 @@ def game_process_level_2(screen):
             self.vx = random.choice(speeds)
             self.vy = random.choice(speeds)
             self.counter = count_of_hits
+            self.end_eggs = False
 
         def update(self):
 
             self.rect = self.rect.move(self.vx, self.vy)
+            if current_map_filename != 'levels/level2_2.txt':
+                self.kill()
             if pygame.sprite.spritecollideany(self, horizontal_borders):
                 self.vy = -self.vy
                 self.counter -= 1
@@ -317,20 +321,23 @@ def game_process_level_2(screen):
                     player.heal(8)
 
             if event.type == pygame.MOUSEBUTTONUP:
-                if player.pos == (4, 2) and first_dialog_started and\
+                if dialog_with_parrot.check_position(player.pos, screen) and first_dialog_started and\
                         current_map_filename == map_filename_1:
                     if dialog_with_parrot.check_start_dialog():
                         dialog_with_parrot.next_string(screen)
 
-                if player.pos == (8, 3) and second_dialog1_started and \
-                        current_map_filename == map_filename_3:
+                elif dialog_with_potato1.check_position(player.pos, screen) and second_dialog1_started and \
+                        current_map_filename == map_filename_3 and dialog_with_potato1.check_start_dialog():
                     if dialog_with_potato1.check_start_dialog():
                         dialog_with_potato1.next_string(screen)
 
-                if player.pos == (8, 3) and second_dialog2_started and \
-                        current_map_filename == map_filename_3:
-                    if dialog_with_potato2.check_start_dialog():
+                elif dialog_with_potato2.check_position(player.pos, screen) and second_dialog2_started and \
+                        current_map_filename == map_filename_3 and dialog_with_potato2.check_start_dialog():
                         dialog_with_potato2.next_string(screen)
+                else:
+                    dialog_with_parrot.clear(screen)
+                    dialog_with_potato1.clear(screen)
+                    dialog_with_potato2.clear(screen)
 
         if not success:
             return False
@@ -373,12 +380,14 @@ def game_process_level_2(screen):
 
         # диалог 2
         if not dialog_with_potato1.check_start_dialog() and end_transformation and not second_dialog2_started:
+
             dialog_with_potato2.next_string(screen)
             second_dialog2_started = True
 
         if level_map[player.pos[1]][player.pos[0]] == 'red_point.png' and \
             current_map_filename == map_filename_3:
             if dialog_with_potato1.check_start_dialog() and not second_dialog1_started:
+                dialog_with_parrot.clear(screen)
                 dialog_with_potato1.next_string(screen)
                 second_dialog1_started = True
 
