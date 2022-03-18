@@ -1,6 +1,5 @@
-import pygame
-from game_init_functions import *
-from dialogs import Dialog
+from utils.game_functions.game_init_functions import *
+from utils.secondary_functions.dialogs import Dialog
 
 
 def get_credits_text(file_name):

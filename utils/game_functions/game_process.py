@@ -1,12 +1,12 @@
 import pygame
-from credits import show_start_credits, show_end_credits
-from game_init_functions import terminate
-from level1 import game_process_level_1
-from level2 import game_process_level_2
-from level3 import game_process_level_3
-from level4 import game_process_level_4
-from level5 import game_process_level_5
-from db_functions import get_level, save_level, reset_player
+from utils.secondary_functions.credits import show_start_credits, show_end_credits
+from utils.game_functions.game_init_functions import terminate
+from utils.levels.level1 import game_process_level_1
+from utils.levels.level2 import game_process_level_2
+from utils.levels.level3 import game_process_level_3
+from utils.levels.level4 import game_process_level_4
+from utils.levels.level5 import game_process_level_5
+from utils.db.db_functions import get_level, save_level, reset_player
 
 
 def init_game():

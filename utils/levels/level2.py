@@ -1,12 +1,10 @@
-import time
-
-from game_init_functions import *
-from db_functions import *
+from utils.game_functions.game_init_functions import *
+from utils.db.db_functions import *
 import pygame
 import random
-from dialogs import Dialog
-from credits import death_screen
-from health_output import Health_Output
+from utils.secondary_functions.dialogs import Dialog
+from utils.secondary_functions.credits import death_screen
+from utils.secondary_functions.health_output import Health_Output
 
 
 def game_process_level_2(screen):
@@ -383,6 +381,7 @@ def game_process_level_2(screen):
 
             dialog_with_potato2.next_string(screen)
             second_dialog2_started = True
+
 
         if level_map[player.pos[1]][player.pos[0]] == 'red_point.png' and \
             current_map_filename == map_filename_3:

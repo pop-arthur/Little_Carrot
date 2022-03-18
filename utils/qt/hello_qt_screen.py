@@ -1,11 +1,10 @@
-import sqlite3
 from PyQt5 import uic
 from  PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication, QWidget
 import sys
-from game_process import init_game
-from db_functions import add_player, player_exists
-from db_functions import reset_player
+from utils.game_functions.game_process import init_game
+from utils.db.db_functions import add_player, player_exists
+from utils.db.db_functions import reset_player
 
 
 class HelloScreen(QWidget):
@@ -18,7 +17,7 @@ class HelloScreen(QWidget):
     def init_ui(self):
         self.setFixedSize(1000, 800)
         self.setWindowTitle("Little Carrot")
-        self.setWindowIcon(QtGui.QIcon('data\qt\gold_carrot.ico'))
+        self.setWindowIcon(QtGui.QIcon('data/qt/gold_carrot.ico'))
 
         self.account_settings_widget = None
 

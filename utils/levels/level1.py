@@ -1,8 +1,8 @@
 import random
-from game_init_functions import *
-from db_functions import *
-from dialogs import Dialog
-from health_output import Health_Output
+from utils.game_functions.game_init_functions import *
+from utils.db.db_functions import *
+from utils.secondary_functions.dialogs import Dialog
+from utils.secondary_functions.health_output import Health_Output
 
 
 def game_process_level_1(screen):

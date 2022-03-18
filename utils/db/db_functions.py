@@ -3,7 +3,7 @@ import sqlite3
 
 # функция проверяет есть ли данное имя в бд и возвращает True или False
 def player_exists(player_name):
-    con = sqlite3.connect('little_carrot.db')
+    con = sqlite3.connect('data/little_carrot.db')
     cur = con.cursor()
 
     try:
@@ -20,7 +20,7 @@ def player_exists(player_name):
 
 # добавляет игрока в db
 def add_player(player_name):
-    con = sqlite3.connect('little_carrot.db')
+    con = sqlite3.connect('data/little_carrot.db')
     cur = con.cursor()
     level, map, health = 0, 1, 5
 
@@ -34,7 +34,7 @@ def add_player(player_name):
 
 
 def get_current_hp():
-    con = sqlite3.connect('little_carrot.db')
+    con = sqlite3.connect('data/little_carrot.db')
     cur = con.cursor()
     player_name = get_player_name()
 
@@ -47,7 +47,7 @@ def get_current_hp():
 
 
 def set_hp(count_of_add_hp):
-    con = sqlite3.connect('little_carrot.db')
+    con = sqlite3.connect('data/little_carrot.db')
     cur = con.cursor()
     player_name = get_player_name()
 
@@ -61,7 +61,7 @@ def set_hp(count_of_add_hp):
 
 
 def add_hp(count_of_add_hp):
-    con = sqlite3.connect('little_carrot.db')
+    con = sqlite3.connect('data/little_carrot.db')
     cur = con.cursor()
     player_name = get_player_name()
 
@@ -75,7 +75,7 @@ def add_hp(count_of_add_hp):
 
 
 def damage_hp(count_of_damage_hp):
-    con = sqlite3.connect('little_carrot.db')
+    con = sqlite3.connect('data/little_carrot.db')
     cur = con.cursor()
     player_name = get_player_name()
 
@@ -89,7 +89,7 @@ def damage_hp(count_of_damage_hp):
 
 
 def save_level(level):
-    con = sqlite3.connect('little_carrot.db')
+    con = sqlite3.connect('data/little_carrot.db')
     cur = con.cursor()
     player_name = get_player_name()
 
@@ -103,7 +103,7 @@ def save_level(level):
 
 
 def get_level():
-    con = sqlite3.connect('little_carrot.db')
+    con = sqlite3.connect('data/little_carrot.db')
     cur = con.cursor()
     player_name = get_player_name()
 
@@ -116,7 +116,7 @@ def get_level():
 
 
 def reset_player():
-    con = sqlite3.connect('little_carrot.db')
+    con = sqlite3.connect('data/little_carrot.db')
     cur = con.cursor()
     player_name = get_player_name()
 

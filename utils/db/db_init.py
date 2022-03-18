@@ -1,7 +1,7 @@
 import sqlite3
 
 
-conn = sqlite3.connect('little_carrot.db')
+conn = sqlite3.connect('../../data/little_carrot.db')
 cur = conn.cursor()
 
 #create users table and fill data

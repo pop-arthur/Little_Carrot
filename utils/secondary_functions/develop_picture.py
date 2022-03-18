@@ -1,22 +1,32 @@
-from game_init_functions import *
-from db_functions import *
+from utils.game_functions.game_init_functions import *
+from utils.db.db_functions import *
 import pygame
 import random
-from dialogs import Dialog
-from health_output import Health_Output
+
+
+def draw_lines(screen):
+    color = (48, 77, 46)
+    [pygame.draw.line(screen, color, (x, 0), (x, 1000), 1) for x in range(0, 1000, 100)]
+    [pygame.draw.line(screen, color, (0, y), (1000, y), 1) for y in range(0, 1000, 100)]
+    # pygame.draw.line(screen, color, (0, 850), (1000, 850), 1)
+
+
+def capture(display, name, pos, size):  # (pygame Surface, String, tuple, tuple)
+    image = pygame.Surface(size)  # Create image surface
+    image.blit(display, (0,0), (pos, size))  # Blit portion of the display to the image
+    pygame.image.save(image, name)  # Save the image to the disk
+
 
 def game_process_level_4(screen):
     FPS = 60
     tile_width, tile_height = 100, 100
     clock = pygame.time.Clock()
-    programIcon = pygame.image.load('data/world_design/characters/gold_carrot_ok.png')
-    pygame.display.set_icon(programIcon)
 
-    map_filename_1 = 'levels/level4.txt'
+    map_filename_1 = 'levels/picture_map.txt'
     current_map_filename = map_filename_1
 
     max_x = 10
-    max_y = 8
+    max_y = 9
 
     # группы спрайтов
     all_sprites = pygame.sprite.Group()
@@ -31,7 +41,7 @@ def game_process_level_4(screen):
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
-                       'Bush-4.png': [load_image('world_design/Bushes/Bush-4.png', scale_size=(74, 74)), (13, 35)],
+                       'Bush-4.png': [load_image('world_design/Bushes/Bush-4.png', scale_size=(74, 74)), (13, 13)],
                        'Big-wooden-fence-1.png':
                            [load_image('world_design/Fences/Big wooden fence/Big-wooden-fence-1.png',
                                        scale_size=(100, 75)),
@@ -53,6 +63,9 @@ def game_process_level_4(screen):
                        'pumpkin.png': [load_image('world_design/characters/pumpkin.png'), (0, 0)],
                        'watermelon.png': [load_image('world_design/characters/watermelon.png'), (0, 0)],
                        'dog.png': [load_image('world_design/characters/dog.png'), (0, 0)],
+                       'egg.png': [load_image('world_design/characters/egg.png'), (0, 0)],
+                       'potato.png': [load_image('world_design/characters/potato.png'), (0, 0)],
+                       'parrot.png': [load_image('world_design/characters/parrot.png'), (0, 0)],
                        'Sculture-2.png': [load_image('world_design/Sculptures/Sculture-2.png'), (0, 0)],
                        'Sculpture-1.png': [load_image('world_design/Sculptures/Sculpture-1.png'), (0, 0)],
                        'box.png': [load_image('world_design/Stones/box.png'), (0, 0)],
@@ -114,32 +127,14 @@ def game_process_level_4(screen):
                 if self.hp == 0:
                     self.kill()
 
-    class Tip(pygame.sprite.Sprite):
-        def __init__(self, text):
-            super().__init__(tip_grooup)
-            self.text = text
-            self.font = pygame.font.Font(None, 35)
-            self.output_text = self.font.render(self.text, True, (255, 255, 255))
-            self.place = self.output_text.get_rect(center=(500, 850))
-
-        def print_tip(self):
-            self.clear()
-            self.output_text = self.font.render(self.text, True, (255, 255, 255))
-            self.place = self.output_text.get_rect(center=(500, 850))
-            screen.blit(self.output_text, self.place)
-
-        def clear(self):
-            self.output_text.fill((0, 0, 0))
-            screen.blit(self.output_text, self.place)
-
     class Player(pygame.sprite.Sprite):
-        player_with_gun_image = load_image('world_design/characters/gold_carrot_with_gun.png')
+        player_with_gun_image = load_image('world_design/characters/gold_carrot_ok.png', scale_size=(200, 200))
 
         def __init__(self, pos_x, pos_y):
             super().__init__(all_sprites, player_group)
             self.image = Player.player_with_gun_image
             self.rect = self.image.get_rect().move(
-                tile_width * pos_x + 5, tile_height * pos_y)
+                tile_width * pos_x + 10, tile_height * pos_y)
             self.pos = (pos_x, pos_y)
             self.centerx = 50
             self.bottom = 90
@@ -219,33 +214,15 @@ def game_process_level_4(screen):
             if self.rect.bottom < 0:
                 self.kill()
 
-    # dialog_status = False
-    dialog_with_dog1 = Dialog(dialogs_group, 'data/dialogs/dialog13.txt', (7, 6))
-    dialog1_started = False
-    dialog_with_dog2 = Dialog(dialogs_group, 'data/dialogs/dialog14.txt', (7, 6))
-    dialog2_started = False
-
-    portal_is_active = False
-    check_portal = False
-    point_exists = False
-
-    shoot_sound = pygame.mixer.Sound('data/music/piu_shoot_sound.mp3')
-    shoot_sound.set_volume(0.5)
-    damage_sound = pygame.mixer.Sound('data/music/damage_sound_full.mp3')
-    damage_sound.set_volume(0.5)
-
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
     generate_level(level_map)
-    save_level(4)
 
     screen.fill((0, 0, 0))
-    health_string = Health_Output(screen, (500, 825), player.hp)
+
+    captured = False
 
     running = True
-    pygame.mixer.music.load('data/music/main_sound.mp3')
-    pygame.mixer.music.play(-1)
-    pygame.mixer.music.set_volume(0.04)
     while running:  # главный игровой цикл
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -260,42 +237,9 @@ def game_process_level_4(screen):
                 if event.key == pygame.K_d:
                     move("right")
                 if event.key == pygame.K_SPACE:
-                    shoot_sound.play()
                     player.shoot()
-            if event.type == pygame.MOUSEBUTTONUP:
-                if dialog1_started and dialog_with_dog1.check_position(player.pos, screen):
-                    if dialog_with_dog1.check_start_dialog():
-                        dialog_with_dog1.next_string(screen)
-
-                if dialog2_started and dialog_with_dog2.check_position(player.pos, screen):
-                    if dialog_with_dog2.check_start_dialog():
-                        dialog_with_dog2.next_string(screen)
-
-        if dialog_with_dog1.check_position(player.pos, screen) and not dialog1_started:
-            dialog1_started = True
-            dialog_with_dog1.next_string(screen)
-
-        if len(scarecrows_group) == 0 and not point_exists:
-            Tile('red_point.png', 7, 6)
-            point_exists = True
-
-        if dialog_with_dog2.check_position(player.pos, screen) and not dialog2_started and len(scarecrows_group) == 0:
-            dialog2_started = True
-            dialog_with_dog2.next_string(screen)
-
-        if not dialog_with_dog2.check_start_dialog():
-            portal_is_active = True
-
-        if portal_is_active:
-            portal.show()
-            check_portal = True
-            portal_is_active = False
-
-        if check_portal and player.pos == (1, 6):
-            running = False
 
         tiles_group.draw(screen)
-        player_group.draw(screen)
         scarecrows_group.draw(screen)
         bullets_group.draw(screen)
         tiles_group.update()
@@ -303,9 +247,13 @@ def game_process_level_4(screen):
         all_sprites.update()
         if pygame.sprite.groupcollide(bullets_group, scarecrows_group, False, False):
             scarecrows_group.update()
-        health_string.update_hp(screen, player.hp)
+        player_group.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
+
+        if not captured:
+            capture(screen, "data/credits_texts/final_image.png", (0, 0), (1000, 850))
+            captured = True
 
     set_hp(player.hp)
     return True
@@ -313,7 +261,7 @@ def game_process_level_4(screen):
 
 if __name__ == '__main__':
     pygame.init()
-    size = width, height = (1000, 900)
+    size = width, height = (1000, 950)
     pygame.display.set_caption("Little Carrot")
     screen = pygame.display.set_mode(size)
     game_process_level_4(screen)

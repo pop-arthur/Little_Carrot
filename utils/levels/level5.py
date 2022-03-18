@@ -1,32 +1,24 @@
-from game_init_functions import *
-from db_functions import *
+from utils.game_functions.game_init_functions import *
+from utils.db.db_functions import *
 import pygame
 import random
+from utils.secondary_functions.credits import death_screen
+from utils.secondary_functions.health_output import Health_Output
 
 
-def draw_lines(screen):
-    color = (48, 77, 46)
-    [pygame.draw.line(screen, color, (x, 0), (x, 1000), 1) for x in range(0, 1000, 100)]
-    [pygame.draw.line(screen, color, (0, y), (1000, y), 1) for y in range(0, 1000, 100)]
-    # pygame.draw.line(screen, color, (0, 850), (1000, 850), 1)
-
-
-def capture(display, name, pos, size):  # (pygame Surface, String, tuple, tuple)
-    image = pygame.Surface(size)  # Create image surface
-    image.blit(display, (0,0), (pos, size))  # Blit portion of the display to the image
-    pygame.image.save(image, name)  # Save the image to the disk
-
-
-def game_process_level_4(screen):
+def game_process_level_5(screen):
     FPS = 60
     tile_width, tile_height = 100, 100
     clock = pygame.time.Clock()
+    timer = 0
+    programIcon = pygame.image.load('data/world_design/characters/gold_carrot_ok.png')
+    pygame.display.set_icon(programIcon)
 
-    map_filename_1 = 'levels/picture_map.txt'
+    map_filename_1 = 'levels/level5.txt'
     current_map_filename = map_filename_1
 
     max_x = 10
-    max_y = 9
+    max_y = 8
 
     # группы спрайтов
     all_sprites = pygame.sprite.Group()
@@ -34,14 +26,15 @@ def game_process_level_4(screen):
     player_group = pygame.sprite.Group()
     dialogs_group = pygame.sprite.Group()
     tip_grooup = pygame.sprite.Group()
-    scarecrows_group = pygame.sprite.Group()
-    bullets_group = pygame.sprite.Group()
+    boss_group = pygame.sprite.Group()
+    player_bullets_group = pygame.sprite.Group()
+    boss_bullet_group = pygame.sprite.Group()
 
-    portal = pygame.sprite.Sprite()
+    success = True
 
     class Tile(pygame.sprite.Sprite):
         tile_images = {'empty': ['', (0, 0)],
-                       'Bush-4.png': [load_image('world_design/Bushes/Bush-4.png', scale_size=(74, 74)), (13, 13)],
+                       'Bush-4.png': [load_image('world_design/Bushes/Bush-4.png', scale_size=(74, 74)), (13, 35)],
                        'Big-wooden-fence-1.png':
                            [load_image('world_design/Fences/Big wooden fence/Big-wooden-fence-1.png',
                                        scale_size=(100, 75)),
@@ -62,10 +55,6 @@ def game_process_level_4(screen):
                        'beet.png': [load_image('world_design/characters/beet.png'), (0, 0)],
                        'pumpkin.png': [load_image('world_design/characters/pumpkin.png'), (0, 0)],
                        'watermelon.png': [load_image('world_design/characters/watermelon.png'), (0, 0)],
-                       'dog.png': [load_image('world_design/characters/dog.png'), (0, 0)],
-                       'egg.png': [load_image('world_design/characters/egg.png'), (0, 0)],
-                       'potato.png': [load_image('world_design/characters/potato.png'), (0, 0)],
-                       'parrot.png': [load_image('world_design/characters/parrot.png'), (0, 0)],
                        'Sculture-2.png': [load_image('world_design/Sculptures/Sculture-2.png'), (0, 0)],
                        'Sculpture-1.png': [load_image('world_design/Sculptures/Sculpture-1.png'), (0, 0)],
                        'box.png': [load_image('world_design/Stones/box.png'), (0, 0)],
@@ -74,7 +63,6 @@ def game_process_level_4(screen):
                        'portal.png': [load_image('world_design/points/portal.png'), (0, 0)],
                        'heal.png': [load_image('world_design/points/heal.png'), (0, 0)],
                        'Flower-3.png': [load_image('world_design/Flowers/Flower-3.png'), (0, 0)]}
-        clear_image = load_image('world_design/characters/clear.png')
 
         def __init__(self, tile_type, pos_x, pos_y):
             super().__init__(all_sprites, tiles_group)
@@ -101,40 +89,77 @@ def game_process_level_4(screen):
                     player.heal(1)
                     tiles_group.remove(self)
 
-        def hide(self):
-            self.image = Tile.clear_image
+    class Boss(pygame.sprite.Sprite):
+        image = load_image('world_design/characters/farmer.png', scale_size=(196, 400))
 
-        def show(self):
-            image, indent = Tile.tile_images[self.tile_type]
-            self.image = image
-
-    class Scarecrow(pygame.sprite.Sprite):
-        image = load_image('world_design/characters/scarecrow.png', scale_size=(90, 90))
-
-        def __init__(self, pos_x, pos_y):
-            super().__init__(all_sprites, scarecrows_group)
-            self.pos = (pos_x, pos_y)
-            self.image = Scarecrow.image
+        def __init__(self):
+            super(Boss, self).__init__(boss_group, all_sprites)
+            self.image = Boss.image
+            self.speed = 40
+            self.pos = [2, 0]
             self.rect = self.image.get_rect().move(
-                tile_width * pos_x + 5, tile_height * pos_y + 5)
-            self.hp = 3
+                tile_width * self.pos[0] + 2, tile_height * self.pos[1] + 8)
             self.group = pygame.sprite.Group()
             self.group.add(self)
+            self.hp = 100
 
-        def update(self):
-            if pygame.sprite.groupcollide(bullets_group, self.group, True, False):
+        def damage(self):
+            nonlocal running
+            if pygame.sprite.groupcollide(player_bullets_group, boss_group, True, False):
                 self.hp -= 1
                 if self.hp == 0:
+                    running = False
                     self.kill()
 
+        def move(self):
+            nonlocal timer
+            if not timer % self.speed == 0:
+                return
+            timer = 0
+            if self.speed > 7:
+                self.speed -= 1
+            moving = []
+            if self.pos[0] != 0:
+                moving.append(-1)
+            if self.pos[0] != 8:
+                moving.append(1)
+            moving = random.choice(moving)
+            self.pos[0] += moving
+            self.rect = self.image.get_rect().move(
+                tile_width * self.pos[0] + 2, tile_height * self.pos[1] + 8)
+
+            digit = random.randint(0, 210)
+            if digit % 5 == 0:
+                Bullet(self.rect.centerx - 50, self.rect.bottom, 5, boss_bullet_group)
+            elif digit % 5 == 1:
+                Bullet(self.rect.centerx + 50, self.rect.bottom, 5, boss_bullet_group)
+
+    class Tip(pygame.sprite.Sprite):
+        def __init__(self, text):
+            super().__init__(tip_grooup)
+            self.text = text
+            self.font = pygame.font.Font(None, 35)
+            self.output_text = self.font.render(self.text, True, (255, 255, 255))
+            self.place = self.output_text.get_rect(center=(500, 850))
+
+        def print_tip(self):
+            self.clear()
+            self.output_text = self.font.render(self.text, True, (255, 255, 255))
+            self.place = self.output_text.get_rect(center=(500, 850))
+            screen.blit(self.output_text, self.place)
+
+        def clear(self):
+            self.output_text.fill((0, 0, 0))
+            screen.blit(self.output_text, self.place)
+
     class Player(pygame.sprite.Sprite):
-        player_with_gun_image = load_image('world_design/characters/gold_carrot_ok.png', scale_size=(200, 200))
+        player_with_gun_image = load_image('world_design/characters/gold_carrot_with_gun.png')
 
         def __init__(self, pos_x, pos_y):
             super().__init__(all_sprites, player_group)
             self.image = Player.player_with_gun_image
             self.rect = self.image.get_rect().move(
-                tile_width * pos_x + 10, tile_height * pos_y)
+                tile_width * pos_x + 5, tile_height * pos_y)
             self.pos = (pos_x, pos_y)
             self.centerx = 50
             self.bottom = 90
@@ -146,31 +171,43 @@ def game_process_level_4(screen):
             self.rect = self.image.get_rect().move(
                 tile_width * x + 5, tile_height * y)
 
-        def check_parrot(self):
-            if self.pos == (4, 2):
-                return True
-            return False
+        def damage(self, count_of_damage):
+            damage_sound.play()
+            self.hp -= count_of_damage
+            if self.hp <= 0:
+                nonlocal success
+                death_screen(screen)
+                success = False
 
         def heal(self, count_of_heal):
             self.hp += count_of_heal
 
         def shoot(self):
-            bullet = Bullet(self.rect.centerx, self.rect.top)
-            all_sprites.add(bullet)
-            bullets_group.add(bullet)
+            Bullet(self.rect.centerx, self.rect.top, -10, player_bullets_group)
+
+    class Bullet(pygame.sprite.Sprite):
+        bullet_image = load_image('world_design/characters/gold_carrot_with_gun.png', scale_size=(20, 30))
+
+        def __init__(self, x, y, speedy, group):
+            super(Bullet, self).__init__(group)
+            self.image = Bullet.bullet_image
+            self.rect = self.image.get_rect()
+            self.rect.bottom = y
+            self.rect.centerx = x
+            self.speedy = speedy
+
+        def update(self):
+            self.rect.y += self.speedy
+            # убить, если он заходит за верхнюю часть экрана
+            if self.rect.bottom < 0 or self.rect.bottom > 800:
+                self.kill()
 
     def generate_level(level):
-        nonlocal portal
         for y in range(len(level)):
             for x in range(len(level[y])):
                 Tile('empty', x, y)
                 if level[y][x] == '.':
                     pass
-                elif level[y][x] == 'scarecrow.png':
-                    Scarecrow(x, y)
-                elif level[y][x] == 'portal.png':
-                    portal = Tile(level[y][x], x, y)
-                    portal.hide()
                 else:
                     Tile(level[y][x], x, y)
 
@@ -185,7 +222,7 @@ def game_process_level_4(screen):
 
         x, y = player.pos
         if movement == "up":
-            if y > 0 and level_map[y - 1][x] in possible_to_move_objects:
+            if y > 4 and level_map[y - 1][x] in possible_to_move_objects:
                 player.move(x, y - 1)
         if movement == "down":
             if y < max_y - 1 and level_map[y + 1][x] in possible_to_move_objects:
@@ -197,32 +234,33 @@ def game_process_level_4(screen):
             if x < max_x - 1 and level_map[y][x + 1] in possible_to_move_objects:
                 player.move(x + 1, y)
 
-    class Bullet(pygame.sprite.Sprite):
-        bullet_image = load_image('world_design/characters/gold_carrot_with_gun.png', scale_size=(20, 30))
+        # грядки
+        if level_map[player.pos[1]][player.pos[0]] == 'dirty_row.png':
+            player.damage(1)
 
-        def __init__(self, x, y):
-            pygame.sprite.Sprite.__init__(self)
-            self.image = Bullet.bullet_image
-            self.rect = self.image.get_rect()
-            self.rect.bottom = y
-            self.rect.centerx = x
-            self.speedy = -10
-
-        def update(self):
-            self.rect.y += self.speedy
-            # убить, если он заходит за верхнюю часть экрана
-            if self.rect.bottom < 0:
-                self.kill()
+    dialog_status = False
 
     level_map, player_pos = load_level(current_map_filename)
     player = Player(*player_pos)
     generate_level(level_map)
 
+    shoot_sound = pygame.mixer.Sound('data/music/piu_shoot_sound.mp3')
+    shoot_sound.set_volume(0.5)
+    damage_sound = pygame.mixer.Sound('data/music/damage_sound_cut.mp3')
+    damage_sound.set_volume(0.5)
+
+    save_level(5)
     screen.fill((0, 0, 0))
 
-    captured = False
+    boss = Boss()
+    pleyer_health_string = Health_Output(screen, (500, 825), player.hp, string='YOU', size=30)
+    boss_health_string = Health_Output(screen, (500, 900), boss.hp, string='BOSS')
 
     running = True
+    pygame.mixer.music.load('data/music/boss_sound.mp3')
+    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(0.1)
+
     while running:  # главный игровой цикл
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -237,23 +275,44 @@ def game_process_level_4(screen):
                 if event.key == pygame.K_d:
                     move("right")
                 if event.key == pygame.K_SPACE:
+                    shoot_sound.play()
                     player.shoot()
+                if event.key == pygame.K_h and event.mod & pygame.KMOD_LCTRL:
+                    player.heal(1000)
+            if event.type == pygame.MOUSEBUTTONUP:
+                pass
+
+        if not success:
+            return False
 
         tiles_group.draw(screen)
-        scarecrows_group.draw(screen)
-        bullets_group.draw(screen)
+        player_group.draw(screen)
         tiles_group.update()
         draw_lines(screen)
-        all_sprites.update()
-        if pygame.sprite.groupcollide(bullets_group, scarecrows_group, False, False):
-            scarecrows_group.update()
-        player_group.draw(screen)
+        boss_group.draw(screen)
+        player_bullets_group.draw(screen)
+        player_bullets_group.update()
+        boss_bullet_group.draw(screen)
+        boss_bullet_group.update()
+        boss.move()
+        pygame.draw.line(screen, (90, 0, 0), (0, 400), (1000, 400), 2)
+
+        if pygame.sprite.groupcollide(player_bullets_group, boss_group, False, False):
+            boss.damage()
+        if pygame.sprite.groupcollide(boss_bullet_group, player_group, True, False):
+            player.damage(1)
+
+        pleyer_health_string.update_hp(screen, player.hp)
+        boss_health_string.update_hp(screen, boss.hp)
+
         pygame.display.flip()
         clock.tick(FPS)
+        timer += 1
 
-        if not captured:
-            capture(screen, "data/credits_texts/final_image.png", (0, 0), (1000, 850))
-            captured = True
+    for i in range(255, -1, -1):
+        screen.fill((i,) * 3)
+        pygame.display.flip()
+        clock.tick(FPS)
 
     set_hp(player.hp)
     return True
@@ -264,4 +323,4 @@ if __name__ == '__main__':
     size = width, height = (1000, 950)
     pygame.display.set_caption("Little Carrot")
     screen = pygame.display.set_mode(size)
-    game_process_level_4(screen)
+    game_process_level_5(screen)
